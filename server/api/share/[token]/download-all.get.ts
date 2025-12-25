@@ -9,11 +9,27 @@ export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
   const query = getQuery(event)
   const folderPath = (query.path as string) || ''
+  const signature = query.sig as string
+  const expiryTime = query.exp as string
 
   if (!token) {
     throw createError({
       statusCode: 400,
       message: 'Share token is required',
+    })
+  }
+  if (!signature || !expiryTime) {
+    throw createError({
+      statusCode: 400,
+      message: 'Missing required parameters',
+    })
+  }
+
+  const parsedExpiry = Number.parseInt(expiryTime, 10)
+  if (Number.isNaN(parsedExpiry)) {
+    throw createError({
+      statusCode: 403,
+      message: 'Invalid expiry time'
     })
   }
 
@@ -48,6 +64,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Verify signature
+  if (!verifyFileSignature(folderPath, token, signature, parsedExpiry, true)) {
+    throw createError({
+      statusCode: 403,
+      message: 'Invalid signature',
+    })
+  }
+
   const info = await getFileInfo(requestedPath)
 
   if (!info.isDirectory) {
@@ -76,7 +100,7 @@ export default defineEventHandler(async (event) => {
   // Set response headers
   const folderName = folderPath ? basename(folderPath) : share.name
   const zipName = `${folderName}-files.zip`
-  
+
   setResponseHeaders(event, {
     'Content-Type': 'application/zip',
     'Content-Disposition': `attachment; filename="${encodeURIComponent(zipName)}"`,

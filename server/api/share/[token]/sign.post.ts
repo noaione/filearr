@@ -1,9 +1,9 @@
 import prisma from '@@/server/utils/db'
-import { signFilePath } from '@@/server/utils/files'
+import { getExpiryTime, signFilePath } from '@@/server/utils/files'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
-  const { path } = await readBody(event)
+  const { path, bulk } = await readBody(event)
 
   if (!token || !path) {
     throw createError({
@@ -31,6 +31,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const signature = signFilePath(path, token)
-  return signature
+  const expiry = getExpiryTime()
+  const signature = signFilePath(path, token, expiry, Boolean(bulk))
+  return {
+    sig: signature,
+    exp: expiry,
+  }
 })

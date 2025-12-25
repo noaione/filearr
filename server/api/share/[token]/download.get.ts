@@ -8,11 +8,19 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const filePath = query.path as string
   const signature = query.sig as string
+  const expiryTime = query.exp as string
 
-  if (!token || !filePath || !signature) {
+  if (!token || !filePath || !signature || !expiryTime) {
     throw createError({
       statusCode: 400,
       message: 'Missing required parameters',
+    })
+  }
+  const parsedExpiry = Number.parseInt(expiryTime, 10)
+  if (Number.isNaN(parsedExpiry)) {
+    throw createError({
+      statusCode: 403,
+      message: 'Invalid expiry time'
     })
   }
 
@@ -48,8 +56,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verify signature
-  const expectedSig = signFilePath(filePath, token)
-  if (signature !== expectedSig) {
+  if (!verifyFileSignature(filePath, token, signature, parsedExpiry)) {
     throw createError({
       statusCode: 403,
       message: 'Invalid signature',

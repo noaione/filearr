@@ -1,3 +1,10 @@
+
+const signatureExpiry = Number.parseInt(process.env.SIGNATURE_EXPIRY || '3600', 10) || 3600;
+
+if (signatureExpiry < 1) {
+  throw new Error('Signature expiry is not valid!');
+}
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -16,6 +23,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     sessionSecret: process.env.SESSION_SECRET || 'change-me-in-production-please-really-long-secret',
     filesDirectory: process.env.FILES_DIRECTORY || './files',
+    signatureExpiry,
     public: {
       appName: 'filearr'
     }
