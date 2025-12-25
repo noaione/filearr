@@ -19,5 +19,8 @@ export default defineNuxtConfig({
     public: {
       appName: 'filearr'
     }
+  },
+  nitro: {
+    preset: 'bun',
   }
 })

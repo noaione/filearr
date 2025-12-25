@@ -8,6 +8,7 @@
       <UButton
         @click="isCreateModalOpen = true"
         size="lg"
+        color="primary"
         icon="i-heroicons-plus"
       >
         Create Share
@@ -57,9 +58,9 @@
           </div>
 
           <div class="flex items-center gap-4 text-xs text-gray-500">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-2">
               <UIcon name="i-heroicons-arrow-down-tray" />
-              <span>{{ share.downloadCount }} downloads</span>
+              <span>{{ share.downloadCount ?? 0 }} downloads</span>
             </div>
             <div v-if="share.password" class="flex items-center gap-1">
               <UIcon name="i-heroicons-lock-closed" />
@@ -81,6 +82,7 @@
             <UButton
               @click="copyUrl(share.shareToken)"
               variant="outline"
+              color="neutral"
               icon="i-heroicons-clipboard-document"
               size="sm"
             >
@@ -180,15 +182,26 @@
           <template #header>
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-bold">Browse Folders</h3>
-              <UButton
-                v-if="browsePath"
-                @click="navigateUp"
-                variant="ghost"
-                size="sm"
-                icon="i-heroicons-arrow-up"
-              >
-                Up
-              </UButton>
+              <div class="flex items-center gap-2">
+                <label class="flex items-center gap-1 text-xs text-gray-400 cursor-pointer">
+                  <input
+                    v-model="showHiddenAdmin"
+                    type="checkbox"
+                    class="rounded bg-gray-800 border-gray-700 text-white focus:ring-white focus:ring-offset-gray-950"
+                    @change="loadBrowseFolder(browsePath)"
+                  />
+                  <span>Hidden</span>
+                </label>
+                <UButton
+                  v-if="browsePath"
+                  @click="navigateUp"
+                  variant="ghost"
+                  size="sm"
+                  icon="i-heroicons-arrow-up"
+                >
+                  Up
+                </UButton>
+              </div>
             </div>
           </template>
   
@@ -205,7 +218,7 @@
               No folders found
             </div>
   
-            <div v-else class="space-y-1">
+            <div v-else class="space-y-1 max-h-96 overflow-y-auto pr-2">
               <button
                 v-for="item in browseItems.filter(i => i.isDirectory)"
                 :key="item.path"
@@ -230,9 +243,9 @@
               <UButton
                 @click="isBrowseModalOpen = false"
                 variant="ghost"
-                color="neutral"
+                color="secondary"
               >
-                Cancel
+                Select
               </UButton>
             </div>
           </template>
@@ -264,6 +277,7 @@ const newShare = ref({
 const browsePath = ref('')
 const browseItems = ref<any[]>([])
 const browseLoading = ref(false)
+const showHiddenAdmin = ref(false)
 
 // Load shares on mount
 onMounted(() => {
@@ -274,7 +288,7 @@ onMounted(() => {
 const loadBrowseFolder = async (path: string = '') => {
   browseLoading.value = true
   try {
-    const data = await $fetch(`/api/admin/browse?path=${encodeURIComponent(path)}`)
+    const data = await $fetch(`/api/admin/browse?path=${encodeURIComponent(path)}&showHidden=${showHiddenAdmin.value}`)
     browseItems.value = data.items
   } catch (error) {
     toast.add({

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4">
+  <div class="min-h-screen flex items-center justify-center p-4 w-full">
     <!-- Password Prompt -->
     <UCard v-if="!verified" class="w-full max-w-md bg-gray-950 border border-gray-800">
       <template #header>
@@ -37,23 +37,47 @@
     </UCard>
 
     <!-- File Browser -->
-    <div v-else class="w-full max-w-4xl">
+    <div v-else class="w-full">
       <UCard class="bg-gray-950 border border-gray-800">
         <template #header>
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="text-2xl font-bold tracking-wider">{{ shareName }}</h2>
-              <UButton
-                v-if="currentPath"
-                @click="navigateUp"
-                variant="ghost"
-                size="sm"
-                icon="i-heroicons-arrow-up"
-              >
-                Up
-              </UButton>
+              <div class="flex items-center gap-2">
+                <UButton
+                  v-if="currentPath"
+                  @click="navigateUp"
+                  variant="ghost"
+                  size="sm"
+                  color="neutral"
+                  icon="i-heroicons-arrow-up"
+                >
+                  Up
+                </UButton>
+                <UButton
+                  v-if="!browseLoading && fileCount > 0"
+                  @click="downloadAllFiles"
+                  variant="outline"
+                  size="sm"
+                  icon="i-heroicons-archive-box-arrow-down"
+                  :loading="downloadingAll"
+                >
+                  Download All ({{ fileCount }})
+                </UButton>
+              </div>
             </div>
-            <p class="text-gray-500 text-sm font-mono">{{ currentPath || '/' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="text-gray-500 text-sm font-mono">{{ `/${currentPath}` }}</p>
+              <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+                <input
+                  v-model="showHidden"
+                  type="checkbox"
+                  class="rounded bg-gray-800 border-gray-700 text-white focus:ring-white focus:ring-offset-gray-950"
+                  @change="loadFolder(currentPath)"
+                />
+                <span>Show hidden files</span>
+              </label>
+            </div>
           </div>
         </template>
 
@@ -123,6 +147,10 @@ const error = ref('')
 const currentPath = ref('')
 const items = ref<any[]>([])
 const browseLoading = ref(false)
+const showHidden = ref(false)
+const downloadingAll = ref(false)
+
+const fileCount = computed(() => items.value.filter(i => i.isFile).length)
 
 // Try to verify without password first
 onMounted(async () => {
@@ -165,7 +193,7 @@ const handleVerify = async () => {
 const loadFolder = async (path: string) => {
   browseLoading.value = true
   try {
-    const data = await $fetch(`/api/share/${token}/browse?path=${encodeURIComponent(path)}`)
+    const data = await $fetch(`/api/share/${token}/browse?path=${encodeURIComponent(path)}&showHidden=${showHidden.value}`)
     currentPath.value = data.currentPath
     items.value = data.items
   } catch (err: any) {
@@ -208,6 +236,27 @@ const downloadFile = async (filePath: string) => {
       description: err.data?.message || 'Failed to download file',
       color: 'error'
     })
+  }
+}
+
+const downloadAllFiles = async () => {
+  downloadingAll.value = true
+  try {
+    const url = `/api/share/${token}/download-all?path=${encodeURIComponent(currentPath.value)}`
+    window.open(url, '_blank')
+    toast.add({
+      title: 'Download Started',
+      description: `Downloading ${fileCount.value} files as ZIP`,
+      color: 'success'
+    })
+  } catch (err: any) {
+    toast.add({
+      title: 'Error',
+      description: err.data?.message || 'Failed to download files',
+      color: 'error'
+    })
+  } finally {
+    downloadingAll.value = false
   }
 }
 

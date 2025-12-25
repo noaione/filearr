@@ -6,6 +6,10 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
+:root {
+  --ui-primary: white;
+}
+
 body {
   background: #000;
   color: #fff;

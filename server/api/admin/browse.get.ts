@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event)
   const path = (query.path as string) || ''
+  const showHidden = query.showHidden === 'true'
 
   const filesDir = getFilesDirectory()
   const absolutePath = sanitizePath(path, filesDir)
@@ -25,9 +26,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const entries = await readdir(absolutePath, { withFileTypes: true })
+  const filteredEntries = showHidden ? entries : entries.filter(e => !e.name.startsWith('.'))
   
   const items = await Promise.all(
-    entries.map(async (entry) => {
+    filteredEntries.map(async (entry) => {
       const itemPath = join(absolutePath, entry.name)
       const stats = await getFileInfo(itemPath)
       

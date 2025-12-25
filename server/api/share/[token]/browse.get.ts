@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
   const query = getQuery(event)
   const subPath = (query.path as string) || ''
+  const showHidden = query.showHidden === 'true'
 
   if (!token) {
     throw createError({
@@ -56,9 +57,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const entries = await readdir(requestedPath, { withFileTypes: true })
+  const filteredEntries = showHidden ? entries : entries.filter(e => !e.name.startsWith('.'))
   
   const items = await Promise.all(
-    entries.map(async (entry) => {
+    filteredEntries.map(async (entry) => {
       const itemPath = join(requestedPath, entry.name)
       const stats = await getFileInfo(itemPath)
       
