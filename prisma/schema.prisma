@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SharedFolder {
+  id            String          @id @default(cuid())
+  name          String
+  path          String
+  shareToken    String          @unique
+  password      String?
+  expiresAt     DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  downloadStats DownloadStat[]
+}
+
+model DownloadStat {
+  id             String       @id @default(cuid())
+  sharedFolderId String
+  sharedFolder   SharedFolder @relation(fields: [sharedFolderId], references: [id], onDelete: Cascade)
+  fileName       String
+  downloadedAt   DateTime     @default(now())
+  ipAddress      String?
+  userAgent      String?
+}

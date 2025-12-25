@@ -1,0 +1,60 @@
+import prisma from '@@/server/utils/db'
+import { comparePassword } from '@@/server/utils/auth'
+
+export default defineEventHandler(async (event) => {
+  const token = getRouterParam(event, 'token')
+
+  if (!token) {
+    throw createError({
+      statusCode: 400,
+      message: 'Share token is required',
+    })
+  }
+
+  const share = await prisma.sharedFolder.findUnique({
+    where: { shareToken: token },
+  })
+
+  if (!share) {
+    throw createError({
+      statusCode: 404,
+      message: 'Share not found',
+    })
+  }
+
+  // Check if expired
+  if (share.expiresAt && share.expiresAt < new Date()) {
+    throw createError({
+      statusCode: 410,
+      message: 'Share has expired',
+    })
+  }
+
+  // Check if password is required
+  if (share.password) {
+    const { password } = await readBody(event)
+    
+    if (!password) {
+      throw createError({
+        statusCode: 401,
+        message: 'Password required',
+      })
+    }
+
+    const valid = await comparePassword(password, share.password)
+    if (!valid) {
+      throw createError({
+        statusCode: 401,
+        message: 'Invalid password',
+      })
+    }
+  }
+
+  return {
+    id: share.id,
+    name: share.name,
+    shareToken: share.shareToken,
+    hasPassword: !!share.password,
+    expiresAt: share.expiresAt,
+  }
+})
