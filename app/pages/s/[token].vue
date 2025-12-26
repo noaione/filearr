@@ -271,7 +271,7 @@ const loadFolder = async (path: string, isFirstMount = false) => {
     description: 'stupidly simple file sharing',
     ogDescription: `viewing: /${currentPath.value}`,
   })
-  router.replace({
+  router.push({
     query: currentPath.value ? { path: currentPath.value } : {}
   })
 }
@@ -433,7 +433,7 @@ const downloadSelectedFiles = async () => {
 
 const viewFileInfo = (item: BrowseItem) => {
   viewThisFile.value = item
-  router.replace({
+  router.push({
     query: { path: item.path }
   })
 }
@@ -443,7 +443,7 @@ const backToBrowse = () => {
   if (!items.value.length && path) {
     loadFolder('') // reload root if no items
   } else {
-    router.replace({
+    router.push({
       query: currentPath.value ? { path: currentPath.value } : {}
     })
   }
@@ -465,6 +465,17 @@ const doSelectAll = () => {
 const doDeselectAll = () => {
   selectedFiles.value.clear()
 }
+
+// check query param path changes
+watch(() => route.query.path, (newPath) => {
+  const pathStr = newPath as string || ''
+  if (pathStr !== currentPath.value && !viewThisFile.value) {
+    loadFolder(pathStr)
+  } else if (viewThisFile.value && pathStr !== viewThisFile.value.path) {
+    viewThisFile.value = null
+    loadFolder(pathStr)
+  }
+})
 
 useSeoMeta({
   title: `${data.value?.name || 'Shared Folder'} - /${currentPath.value}`,
