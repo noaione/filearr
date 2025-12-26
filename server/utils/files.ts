@@ -11,10 +11,10 @@ const config = useRuntimeConfig()
 export function sanitizePath(userPath: string, baseDir: string): string {
   // Normalize the path
   const normalized = normalize(userPath)
-  
+
   // Resolve to absolute path
   const absolute = resolve(baseDir, normalized)
-  
+
   // Ensure the resolved path is within the base directory
   if (!absolute.startsWith(baseDir)) {
     throw createError({
@@ -22,7 +22,7 @@ export function sanitizePath(userPath: string, baseDir: string): string {
       message: 'Access denied: Invalid path',
     })
   }
-  
+
   return absolute
 }
 

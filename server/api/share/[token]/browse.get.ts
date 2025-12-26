@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 
   const entries = await readdir(requestedPath, { withFileTypes: true })
   const filteredEntries = showHidden ? entries : entries.filter(e => !e.name.startsWith('.'))
-  
+
   const items = await Promise.all(
     filteredEntries.map(async (entry) => {
       const itemPath = join(requestedPath, entry.name)

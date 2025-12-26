@@ -49,7 +49,7 @@ async function setup() {
 
   // Hash password and create user
   const hashedPassword = await bcrypt.hash(password, 10)
-  
+
   await prisma.user.create({
     data: {
       username,

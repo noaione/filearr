@@ -28,11 +28,11 @@ export async function getSession(event: H3Event): Promise<IronSession<SessionDat
     event.node.res,
     sessionOptions
   )
-  
+
   if (!session.isLoggedIn) {
     session.isLoggedIn = false
   }
-  
+
   return session
 }
 

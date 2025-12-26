@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
       message: 'Share token is required',
     })
   }
+
   if (!signature || !expiryTime) {
     throw createError({
       statusCode: 400,

@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
       message: 'Missing required parameters',
     })
   }
+
   const parsedExpiry = Number.parseInt(expiryTime, 10)
   if (Number.isNaN(parsedExpiry)) {
     throw createError({
