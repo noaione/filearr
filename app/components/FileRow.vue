@@ -17,13 +17,12 @@
       :class="{
         'cursor-pointer': selectionMode || !selectionMode
       }"
-      @click="!selectionMode && $emit('viewFile', item)"
+      @click="specialRowClick"
     >
       <div class="flex items-start gap-3 flex-1 min-w-0">
         <StupidCheckbox
           v-if="selectionMode"
           :selected="isSelected"
-          @change="(shiftKey: boolean) => $emit('toggleSelect', item.path, shiftKey)"
           class="mt-1"
         />
         <UIcon
@@ -32,6 +31,9 @@
         />
         <div
           class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1 min-w-0"
+          :class="{
+            'select-none': selectionMode
+          }"
         >
           <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
           <span class="text-gray-600 text-xs shrink-0">{{ formatSize(item.size) }}</span>
@@ -54,13 +56,13 @@
 <script setup lang="ts">
 import type { BrowseItem } from '~~/server/api/share/[token]/browse.get';
 
-defineProps<{
+const props = defineProps<{
   item: BrowseItem & { isGoUp?: boolean }
   selectionMode?: boolean
   isSelected?: boolean
 }>();
 
-defineEmits<{
+const emits = defineEmits<{
   navigate: [path: string];
   download: [path: string];
   toggleSelect: [path: string, shiftKey: boolean];
@@ -73,5 +75,15 @@ const formatSize = (bytes: number) => {
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+}
+
+function specialRowClick(payload: PointerEvent) {
+  // check if shift key is pressed
+  const shiftKey = payload.shiftKey
+  if (props.selectionMode) {
+    emits('toggleSelect', props.item.path, shiftKey)
+  } else {
+    emits('viewFile', props.item)
+  }
 }
 </script>

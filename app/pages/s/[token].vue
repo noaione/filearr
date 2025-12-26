@@ -39,6 +39,28 @@
                 <span class="hidden sm:inline">Up</span>
               </UButton>
               <UButton
+                v-if="selectionMode && selectedFiles.size < fileCount"
+                @click="doSelectAll"
+                variant="ghost"
+                size="sm"
+                color="primary"
+                icon="i-tabler-select-all"
+                class="shrink-0 cursor-pointer"
+              >
+                <span class="hidden sm:inline">Select All</span>
+              </UButton>
+              <UButton
+                v-if="selectionMode && selectedFiles.size > 0"
+                @click="doDeselectAll"
+                variant="ghost"
+                size="sm"
+                color="primary"
+                icon="i-tabler-deselect"
+                class="shrink-0 cursor-pointer"
+              >
+                <span class="hidden sm:inline">Deselect All</span>
+              </UButton>
+              <UButton
                 @click="toggleSelectionMode"
                 variant="ghost"
                 size="sm"
@@ -433,6 +455,15 @@ const navigateUpSpecial = () => {
   } else {
     navigateUp()
   }
+}
+
+const doSelectAll = () => {
+  const fileItems = items.value.filter(item => item.isFile)
+  selectedFiles.value = new Set(fileItems.map(item => item.path))
+}
+
+const doDeselectAll = () => {
+  selectedFiles.value.clear()
 }
 
 useSeoMeta({
