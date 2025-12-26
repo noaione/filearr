@@ -3,12 +3,14 @@ import { readdir } from 'fs/promises'
 import { join, basename } from 'path'
 import archiver from 'archiver'
 import prisma from '@@/server/utils/db'
-import { sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
+import { sanitizePath, getFilesDirectory, getFileInfo, precheckFilesSize } from '@@/server/utils/files'
 import { getUserIpAddress } from '~~/server/utils/ips'
+
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
   const query = getQuery(event)
+  const config = useRuntimeConfig(event)
   const folderPath = (query.path as string) || ''
   const signature = query.sig as string
   const expiryTime = query.exp as string
@@ -93,6 +95,8 @@ export default defineEventHandler(async (event) => {
       message: 'No files to download in this folder',
     })
   }
+
+  await precheckFilesSize(files.map((ff) => join(requestedPath, ff.name)), config.maxBulkSizeBytes)
 
   // Create ZIP archive
   const archive = archiver('zip', {

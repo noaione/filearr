@@ -1,9 +1,23 @@
 import packageJson from './package.json'
 
 const signatureExpiry = Number.parseInt(process.env.SIGNATURE_EXPIRY || '3600', 10) || 3600;
+const maxBulkSizeBytes = Number.parseInt(process.env.MAX_BULK_SIZE_BYTES || '1073741824', 10) || 1073741824;
 
 if (signatureExpiry < 1) {
   throw new Error('Signature expiry is not valid!');
+}
+
+if (maxBulkSizeBytes < 1) {
+  throw new Error('Max bulk size bytes is not valid!');
+}
+
+// if it's bigger than 2gb, we warn the user
+if (maxBulkSizeBytes > 2147483648) {
+  console.warn('Warning: MAX_BULK_SIZE_BYTES is set to more than 2GB, which may cause performance issues.');
+}
+
+if (!process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET is not set!');
 }
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -109,9 +123,10 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    sessionSecret: process.env.SESSION_SECRET || 'change-me-in-production-please-really-long-secret',
+    sessionSecret: process.env.SESSION_SECRET!,
     filesDirectory: process.env.FILES_DIRECTORY || './files',
     signatureExpiry,
+    maxBulkSizeBytes,
     public: {
       app: {
         name: packageJson.name,

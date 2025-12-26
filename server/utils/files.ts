@@ -110,3 +110,24 @@ export async function listDirectory(absolutePath: string) {
 export function getFilesDirectory(): string {
   return resolve(process.cwd(), config.filesDirectory)
 }
+
+/**
+ * Precheck total size of files for bulk download
+ */
+export async function precheckFilesSize(files: string[], maxSizeBytes: number) {
+  let totalSize = 0
+  for (const file of files) {
+    const info = await getFileInfo(file)
+    if (info.isFile) {
+      totalSize += info.size
+      if (totalSize > maxSizeBytes) {
+        throw createError({
+          statusCode: 413,
+          message: 'Selected files exceed maximum allowed size for bulk download',
+        })
+      }
+    }
+  }
+
+  return totalSize
+}
