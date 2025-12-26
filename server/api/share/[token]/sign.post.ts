@@ -4,9 +4,9 @@ import { getSessionShare } from '~~/server/utils/session'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
-  const { path, bulk } = await readBody(event)
+  const { path, paths, bulk } = await readBody(event)
 
-  if (!token || !path) {
+  if (!token || (!path && !paths)) {
     throw createError({
       statusCode: 400,
       message: 'Missing required parameters',
@@ -41,7 +41,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const expiry = getExpiryTime()
-  const signature = signFilePath(path, token, expiry, Boolean(bulk)).digest('hex')
+  const signData = paths ? JSON.stringify(paths) : path
+  const signature = signFilePath(signData, token, expiry, Boolean(bulk)).digest('hex')
   return {
     sig: signature,
     exp: expiry,

@@ -6,6 +6,8 @@ stupidly simple file sharing server
 - single admin user (with setup script)
 - password protected shares
 - bulk file downloads as zip
+  - manual selection mode
+  - all files download in folder
 - download statistics
 - fully local, no 3rd party services
 

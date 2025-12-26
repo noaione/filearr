@@ -11,15 +11,33 @@
     </button>
     
     <!-- File -->
-    <div v-else class="flex flex-col sm:flex-row sm:items-center gap-3 px-3 py-4">
+    <div
+      v-else
+      class="flex flex-col sm:flex-row sm:items-center gap-3 px-3 py-4"
+      :class="{
+        'cursor-pointer': selectionMode
+      }"
+    >
       <div class="flex items-start gap-3 flex-1 min-w-0">
-        <UIcon name="i-heroicons-document" class="text-gray-500 text-xl shrink-0 mt-0.5" />
-        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1 min-w-0">
+        <UCheckbox
+          v-if="selectionMode"
+          v-bind:model-value="isSelected"
+          @update:model-value="$emit('toggleSelect', item.path)"
+          class="mt-0.5"
+        />
+        <UIcon
+          name="i-heroicons-document"
+          class="text-gray-500 text-xl shrink-0 mt-0.5"
+        />
+        <div
+          class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1 min-w-0"
+        >
           <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
           <span class="text-gray-600 text-xs shrink-0">{{ formatSize(item.size) }}</span>
         </div>
       </div>
       <UButton 
+        v-if="!selectionMode"
         @click="$emit('download', item.path)" 
         class="font-bold tracking-wider cursor-pointer shrink-0 w-full sm:w-auto" 
         variant="outline" 
@@ -37,13 +55,15 @@ import type { BrowseItem } from '~~/server/api/share/[token]/browse.get';
 
 defineProps<{
   item: BrowseItem
+  selectionMode?: boolean
+  isSelected?: boolean
 }>();
 
 defineEmits<{
   navigate: [path: string];
   download: [path: string];
+  toggleSelect: [path: string];
 }>();
-
 
 const formatSize = (bytes: number) => {
   if (bytes === 0) return '0 B'

@@ -39,7 +39,29 @@
                 <span class="hidden sm:inline">Up</span>
               </UButton>
               <UButton
-                v-if="!browseLoading && fileCount > 0"
+                @click="toggleSelectionMode"
+                variant="ghost"
+                size="sm"
+                :color="selectionMode ? 'primary' : 'neutral'"
+                :icon="selectionMode ? 'i-heroicons-check-circle' : 'i-heroicons-cursor-arrow-rays'"
+                class="shrink-0 cursor-pointer"
+              >
+                <span class="hidden sm:inline">{{ selectionMode ? 'Cancel' : 'Select' }}</span>
+              </UButton>
+              <UButton
+                v-if="selectionMode && selectedFiles.size > 0"
+                @click="downloadSelectedFiles"
+                variant="solid"
+                size="sm"
+                class="tracking-wide font-extrabold cursor-pointer shrink-0 text-xs sm:text-sm"
+                icon="i-heroicons-arrow-down-tray"
+                :loading="downloadingSelected"
+              >
+                <span class="hidden sm:inline">Download ({{ selectedFiles.size }})</span>
+                <span class="sm:hidden">({{ selectedFiles.size }})</span>
+              </UButton>
+              <UButton
+                v-if="!selectionMode && !browseLoading && fileCount > 0"
                 @click="downloadAllFiles"
                 variant="outline"
                 size="sm"
@@ -69,7 +91,7 @@
       </div>
 
       <!-- Scrollable Content -->
-      <div class="bg-gray-950 border-x border-b border-gray-800 rounded-b-lg p-4 sm:p-6 flex-1 overflow-scroll">
+      <div class="bg-gray-950 border-x border-b border-gray-800 rounded-b-lg p-4 sm:p-6 flex-1 overflow-auto">
         <div class="space-y-2">
           <div v-if="browseLoading" class="text-center py-12 text-gray-500">Loading...</div>
           <div v-else-if="items.length === 0">
@@ -79,7 +101,16 @@
           <div v-else-if="items.length === 0" class="text-center py-12 text-gray-500">This folder is empty</div>
           <div v-else class="space-y-1">
             <FileDetail v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
-            <FileDetail v-for="item in items" :key="item.path" :item="item" @navigate="navigateToFolder" @download="downloadFile" />
+            <FileDetail 
+              v-for="item in items" 
+              :key="item.path" 
+              :item="item" 
+              :selection-mode="selectionMode"
+              :is-selected="selectedFiles.has(item.path)"
+              @navigate="navigateToFolder" 
+              @download="downloadFile"
+              @toggle-select="toggleFileSelection"
+            />
           </div>
         </div>
       </div>
@@ -110,6 +141,9 @@ const items = ref<BrowseItem[]>([])
 const browseLoading = ref(false)
 const showHidden = ref(false)
 const downloadingAll = ref(false)
+const selectionMode = ref(false)
+const selectedFiles = ref<Set<string>>(new Set())
+const downloadingSelected = ref(false)
 
 const fileCount = computed(() => items.value.filter(i => i.isFile).length)
 
@@ -240,6 +274,68 @@ const downloadAllFiles = async () => {
     })
   } finally {
     downloadingAll.value = false
+  }
+}
+
+const toggleSelectionMode = () => {
+  selectionMode.value = !selectionMode.value
+  if (!selectionMode.value) {
+    selectedFiles.value.clear()
+  }
+}
+
+const toggleFileSelection = (path: string) => {
+  if (selectedFiles.value.has(path)) {
+    selectedFiles.value.delete(path)
+  } else {
+    selectedFiles.value.add(path)
+  }
+}
+
+const downloadSelectedFiles = async () => {
+  if (selectedFiles.value.size === 0) return
+
+  downloadingSelected.value = true
+  try {
+    const paths = Array.from(selectedFiles.value)
+    const signature = await $fetch(`/api/share/${token}/sign`, {
+      method: 'POST',
+      body: { paths, bulk: true }
+    })
+
+    const url = `/api/share/${token}/download-selected?sig=${signature.sig}&exp=${signature.exp}`
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = url
+    form.style.display = 'none'
+
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = 'paths'
+    input.value = JSON.stringify(paths)
+    form.appendChild(input)
+
+    document.body.appendChild(form)
+    form.submit()
+    document.body.removeChild(form)
+
+    toast.add({
+      title: 'Download Started',
+      description: `Downloading ${selectedFiles.value.size} selected files as ZIP`,
+      color: 'success'
+    })
+
+    // Exit selection mode and clear selections
+    selectionMode.value = false
+    selectedFiles.value.clear()
+  } catch (err: any) {
+    toast.add({
+      title: 'Error',
+      description: err.data?.message || 'Failed to download selected files',
+      color: 'error'
+    })
+  } finally {
+    downloadingSelected.value = false
   }
 }
 </script>
