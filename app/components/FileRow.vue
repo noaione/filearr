@@ -6,7 +6,7 @@
       @click="$emit('navigate', item.path)" 
       class="flex items-start gap-3 w-full text-left cursor-pointer px-3 py-4"
     >
-      <UIcon name="i-heroicons-folder" class="text-yellow-500 text-xl shrink-0 mt-0.5" />
+      <UIcon :name="item.isGoUp ? 'i-heroicons-arrow-uturn-left' : 'i-heroicons-folder'" class="text-yellow-500 text-xl shrink-0 mt-0.5" />
       <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
     </button>
     
@@ -55,7 +55,7 @@
 import type { BrowseItem } from '~~/server/api/share/[token]/browse.get';
 
 defineProps<{
-  item: BrowseItem
+  item: BrowseItem & { isGoUp?: boolean }
   selectionMode?: boolean
   isSelected?: boolean
 }>();

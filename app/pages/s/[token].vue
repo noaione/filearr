@@ -95,10 +95,9 @@
         <div class="space-y-2">
           <div v-if="browseLoading" class="text-center py-12 text-gray-500">Loading...</div>
           <div v-else-if="items.length === 0">
-            <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
+            <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUpSpecial" />
             <div class="text-center py-12 text-gray-500">This folder is empty</div>
           </div>
-          <div v-else-if="items.length === 0" class="text-center py-12 text-gray-500">This folder is empty</div>
           <div v-else class="space-y-1">
             <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
             <FileRow 
@@ -122,7 +121,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import FileInfo from '~/components/FileInfo.vue'
 import type { BrowseItem } from '~~/server/api/share/[token]/browse.get'
 
 definePageMeta({
@@ -130,8 +128,10 @@ definePageMeta({
 })
 
 const route = useRoute()
+const router = useRouter()
 const toast = useToast()
 
+const path = route.query.path as string || ''
 const token = route.params.token as string
 
 const { data, error: errorAPI } = await useFetch(`/api/share/${token}/info`)
@@ -153,17 +153,22 @@ const selectedFiles = ref<Set<string>>(new Set())
 const downloadingSelected = ref(false)
 const lastSelectedIndex = ref<number | null>(null)
 const viewThisFile = ref<BrowseItem | null>(null)
+const failureFirstLoad = ref<boolean>(false)
 
 const fileCount = computed(() => items.value.filter(i => i.isFile).length)
 
-const SPECIAL_ACTION: BrowseItem = {
-  name: '..',
-  isDirectory: true,
-  isFile: false,
-  path: '',
-  size: 0,
-  modified: ''
-}
+const SPECIAL_ACTION = computed(() => {
+  const naming = failureFirstLoad.value ? 'Go to Root' : '..'
+  return {
+    name: naming,
+    isDirectory: true,
+    isFile: false,
+    isGoUp: true,
+    path: '',
+    size: 0,
+    modified: ''
+  }
+})
 
 // Try to verify without password first
 onMounted(async () => {
@@ -185,7 +190,7 @@ onMounted(async () => {
   await nextTick()
 
   if (verified.value) {
-    loadFolder('')
+    loadFolder(path, true)
   }
 })
 
@@ -208,28 +213,56 @@ const handleVerify = async () => {
   }
 }
 
-const loadFolder = async (path: string) => {
+const loadFolder = async (path: string, isFirstMount = false) => {
   browseLoading.value = true
+  failureFirstLoad.value = false
+  let hasFailure = false
   try {
     const data = await $fetch(`/api/share/${token}/browse?path=${encodeURIComponent(path)}&showHidden=${showHidden.value}`)
     currentPath.value = data.currentPath
     items.value = data.items
   } catch (err: any) {
-    toast.add({
-      title: 'Error',
-      description: err.data?.message || 'Failed to load folder',
-      color: 'error'
-    })
+    if (err.data?.message === 'Path must be a directory' && path && isFirstMount) {
+      // try fetching as file info instead
+      viewFileInfo(constructFakePath(path))
+      currentPath.value = path
+    } else {
+      if (err.data?.message === 'File or folder not found' && path && isFirstMount) {
+        failureFirstLoad.value = true
+        currentPath.value = path
+      }
+      toast.add({
+        title: 'Error',
+        description: err.data?.message || 'Failed to load folder',
+        color: 'error'
+      })
+      hasFailure = true
+    }
   } finally {
     browseLoading.value = false
   }
 
+  if (hasFailure) return
   useSeoMeta({
     title: `${shareName.value} - /${currentPath.value}`,
     ogTitle: 'filearr',
     description: 'stupidly simple file sharing',
     ogDescription: `viewing: /${currentPath.value}`,
   })
+  router.replace({
+    query: currentPath.value ? { path: currentPath.value } : {}
+  })
+}
+
+const constructFakePath = (path: string): BrowseItem => {
+  return {
+    path,
+    name: '',
+    isDirectory: false,
+    isFile: true,
+    size: 0,
+    modified: ''
+  }
 }
 
 const navigateToFolder = (path: string) => {
@@ -378,10 +411,28 @@ const downloadSelectedFiles = async () => {
 
 const viewFileInfo = (item: BrowseItem) => {
   viewThisFile.value = item
+  router.replace({
+    query: { path: item.path }
+  })
 }
 
 const backToBrowse = () => {
   viewThisFile.value = null
+  if (!items.value.length && path) {
+    loadFolder('') // reload root if no items
+  } else {
+    router.replace({
+      query: currentPath.value ? { path: currentPath.value } : {}
+    })
+  }
+}
+
+const navigateUpSpecial = () => {
+  if (failureFirstLoad.value) {
+    loadFolder('')
+  } else {
+    navigateUp()
+  }
 }
 
 useSeoMeta({

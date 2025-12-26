@@ -8,7 +8,7 @@
             variant="ghost"
             size="sm"
             icon="i-heroicons-arrow-left"
-            class="shrink-0 cursor-pointer mt-0.5 font-bold"
+            class="shrink-0 cursor-pointer mt-1 font-bold"
           >
             Back
           </UButton>
