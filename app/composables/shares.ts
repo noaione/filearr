@@ -109,6 +109,29 @@ export const useSharesStore = defineStore('shares', {
       }
     },
 
+    async updateShare(id: string, data: {
+      name?: string
+      password?: string
+      expiresAt?: string
+    }) {
+      try {
+        const share = await $fetch(`/api/admin/shares/${id}`, {
+          method: 'PATCH',
+          body: data,
+        })
+        const index = this.shares.findIndex(s => s.id === id)
+        if (index !== -1) {
+          this.shares[index] = share as any
+        }
+        return { success: true, share }
+      } catch (error: any) {
+        return {
+          success: false,
+          error: error.data?.message || 'Failed to update share',
+        }
+      }
+    },
+
     async deleteFileShare(id: string) {
       try {
         await $fetch(`/api/admin/file-shares/${id}`, {
@@ -120,6 +143,29 @@ export const useSharesStore = defineStore('shares', {
         return {
           success: false,
           error: error.data?.message || 'Failed to delete file share',
+        }
+      }
+    },
+
+    async updateFileShare(id: string, data: {
+      name?: string
+      password?: string
+      expiresAt?: string
+    }) {
+      try {
+        const share = await $fetch(`/api/admin/file-shares/${id}`, {
+          method: 'PATCH',
+          body: data,
+        })
+        const index = this.fileShares.findIndex(s => s.id === id)
+        if (index !== -1) {
+          this.fileShares[index] = share as any
+        }
+        return { success: true, share }
+      } catch (error: any) {
+        return {
+          success: false,
+          error: error.data?.message || 'Failed to update file share',
         }
       }
     },

@@ -65,13 +65,23 @@
               <h3 class="font-extrabold text-lg">{{ share.name }}</h3>
               <p class="text-gray-500 text-sm font-mono mt-1.5 font-semibold">{{ share.path }}</p>
             </div>
-            <UButton
-              @click="deleteShare(share.id)"
-              color="error"
-              variant="ghost"
-              icon="heroicons:trash"
-              size="sm"
-            />
+            <div class="flex gap-2">
+              <UButton
+                v-if="!isShareExpired(share.expiresAt)"
+                @click="openEditModal(share)"
+                color="warning"
+                variant="ghost"
+                icon="heroicons:pencil"
+                size="sm"
+              />
+              <UButton
+                @click="deleteShare(share.id)"
+                color="error"
+                variant="ghost"
+                icon="heroicons:trash"
+                size="sm"
+              />
+            </div>
           </div>
 
           <div class="flex items-center gap-4 text-xs text-gray-500">
@@ -147,13 +157,23 @@
                 <h3 class="font-extrabold text-lg">{{ share.name }}</h3>
                 <p class="text-gray-500 text-sm font-mono mt-1.5 font-semibold">{{ share.path }}</p>
               </div>
-              <UButton
-                @click="deleteFileShare(share.id)"
-                color="error"
-                variant="ghost"
-                icon="heroicons:trash"
-                size="sm"
-              />
+              <div class="flex gap-2">
+                <UButton
+                  v-if="!isShareExpired(share.expiresAt)"
+                  @click="openEditFileModal(share)"
+                  color="primary"
+                  variant="ghost"
+                  icon="heroicons:pencil"
+                  size="sm"
+                />
+                <UButton
+                  @click="deleteFileShare(share.id)"
+                  color="error"
+                  variant="ghost"
+                  icon="heroicons:trash"
+                  size="sm"
+                />
+              </div>
             </div>
 
             <div class="flex items-center gap-4 text-xs text-gray-500">
@@ -550,6 +570,148 @@
         </UCard>
       </template>
     </UModal>
+
+    <!-- Edit Folder Share Modal -->
+    <UModal v-model:open="isEditModalOpen">
+      <template #content>
+        <UCard>
+          <template #header>
+            <h3 class="text-lg font-bold">Edit Shared Folder</h3>
+          </template>
+  
+          <form @submit.prevent="handleEditShare" class="space-y-4">
+            <UFormField label="Name" required>
+              <UInput
+                v-model="editShare.name"
+                placeholder="My Shared Folder"
+                class="w-full"
+              />
+            </UFormField>
+
+            <UFormField label="Path (read-only)">
+              <UInput
+                :model-value="editShare.path"
+                class="w-full"
+                readonly
+                disabled
+              />
+            </UFormField>
+  
+            <UFormField label="Password (leave empty to remove, or enter new password)">
+              <UInput
+                v-model="editShare.password"
+                type="text"
+                class="w-full"
+                autocomplete="off"
+                placeholder="Leave empty to keep current or remove"
+              />
+            </UFormField>
+  
+            <UFormField label="Expiration Date (optional)">
+              <UInput
+                v-model="editShare.expiresAt"
+                type="datetime-local"
+                class="w-full"
+              />
+            </UFormField>
+  
+            <div v-if="editError" class="text-red-500 text-sm">
+              {{ editError }}
+            </div>
+  
+            <div class="flex gap-2">
+              <UButton
+                type="submit"
+                :loading="editing"
+                :disabled="!editShare.name"
+                class="flex-1"
+                color="secondary"
+              >
+                Update Share
+              </UButton>
+              <UButton
+                @click="isEditModalOpen = false"
+                variant="ghost"
+                color="neutral"
+              >
+                Cancel
+              </UButton>
+            </div>
+          </form>
+        </UCard>
+      </template>
+    </UModal>
+
+    <!-- Edit File Share Modal -->
+    <UModal v-model:open="isEditFileModalOpen">
+      <template #content>
+        <UCard>
+          <template #header>
+            <h3 class="text-lg font-bold">Edit Shared File</h3>
+          </template>
+  
+          <form @submit.prevent="handleEditFileShare" class="space-y-4">
+            <UFormField label="Name" required>
+              <UInput
+                v-model="editFileShare.name"
+                placeholder="My Shared File"
+                class="w-full"
+              />
+            </UFormField>
+
+            <UFormField label="Path (read-only)">
+              <UInput
+                :model-value="editFileShare.path"
+                class="w-full"
+                readonly
+                disabled
+              />
+            </UFormField>
+  
+            <UFormField label="Password (leave empty to remove, or enter new password)">
+              <UInput
+                v-model="editFileShare.password"
+                type="text"
+                class="w-full"
+                autocomplete="off"
+                placeholder="Leave empty to keep current or remove"
+              />
+            </UFormField>
+  
+            <UFormField label="Expiration Date (optional)">
+              <UInput
+                v-model="editFileShare.expiresAt"
+                type="datetime-local"
+                class="w-full"
+              />
+            </UFormField>
+  
+            <div v-if="editFileError" class="text-red-500 text-sm">
+              {{ editFileError }}
+            </div>
+  
+            <div class="flex gap-2">
+              <UButton
+                type="submit"
+                :loading="editingFile"
+                :disabled="!editFileShare.name"
+                class="flex-1"
+                color="secondary"
+              >
+                Update File Share
+              </UButton>
+              <UButton
+                @click="isEditFileModalOpen = false"
+                variant="ghost"
+                color="neutral"
+              >
+                Cancel
+              </UButton>
+            </div>
+          </form>
+        </UCard>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -575,11 +737,35 @@ const isBrowseModalOpen = ref(false)
 const creating = ref(false)
 const createError = ref('')
 
+// Edit folder share state
+const isEditModalOpen = ref(false)
+const editing = ref(false)
+const editError = ref('')
+const editShare = ref({
+  id: '',
+  name: '',
+  path: '',
+  password: '',
+  expiresAt: '',
+})
+
 // File share state
 const isCreateFileShareModalOpen = ref(false)
 const isBrowseFileModalOpen = ref(false)
 const creatingFile = ref(false)
 const createFileError = ref('')
+
+// Edit file share state
+const isEditFileModalOpen = ref(false)
+const editingFile = ref(false)
+const editFileError = ref('')
+const editFileShare = ref({
+  id: '',
+  name: '',
+  path: '',
+  password: '',
+  expiresAt: '',
+})
 
 const newShare = ref({
   name: '',
@@ -857,5 +1043,107 @@ const deleteFileShare = async (id: string) => {
       color: 'error'
     })
   }
+}
+
+// Check if share is expired
+const isShareExpired = (expiresAt: string | null) => {
+  if (!expiresAt) return false
+  return new Date(expiresAt) < new Date()
+}
+
+// Open edit folder share modal
+const openEditModal = (share: any) => {
+  editShare.value = {
+    id: share.id,
+    name: share.name,
+    path: share.path,
+    password: '',
+    expiresAt: share.expiresAt ? new Date(share.expiresAt).toISOString().slice(0, 16) : '',
+  }
+  isEditModalOpen.value = true
+}
+
+// Handle edit folder share
+const handleEditShare = async () => {
+  editing.value = true
+  editError.value = ''
+
+  const updateData: any = {
+    name: editShare.value.name,
+  }
+
+  // Only include password if it's changed
+  if (editShare.value.password) {
+    updateData.password = editShare.value.password
+  }
+
+  // Include expiry
+  if (editShare.value.expiresAt) {
+    updateData.expiresAt = editShare.value.expiresAt
+  }
+
+  const result = await sharesStore.updateShare(editShare.value.id, updateData)
+
+  if (result.success) {
+    toast.add({
+      title: 'Success',
+      description: 'Share updated successfully',
+      color: 'success'
+    })
+    isEditModalOpen.value = false
+    editShare.value = { id: '', name: '', path: '', password: '', expiresAt: '' }
+  } else {
+    editError.value = result.error || 'Failed to update share'
+  }
+
+  editing.value = false
+}
+
+// Open edit file share modal
+const openEditFileModal = (share: any) => {
+  editFileShare.value = {
+    id: share.id,
+    name: share.name,
+    path: share.path,
+    password: '',
+    expiresAt: share.expiresAt ? new Date(share.expiresAt).toISOString().slice(0, 16) : '',
+  }
+  isEditFileModalOpen.value = true
+}
+
+// Handle edit file share
+const handleEditFileShare = async () => {
+  editingFile.value = true
+  editFileError.value = ''
+
+  const updateData: any = {
+    name: editFileShare.value.name,
+  }
+
+  // Only include password if it's changed
+  if (editFileShare.value.password) {
+    updateData.password = editFileShare.value.password
+  }
+
+  // Include expiry
+  if (editFileShare.value.expiresAt) {
+    updateData.expiresAt = editFileShare.value.expiresAt
+  }
+
+  const result = await sharesStore.updateFileShare(editFileShare.value.id, updateData)
+
+  if (result.success) {
+    toast.add({
+      title: 'Success',
+      description: 'File share updated successfully',
+      color: 'success'
+    })
+    isEditFileModalOpen.value = false
+    editFileShare.value = { id: '', name: '', path: '', password: '', expiresAt: '' }
+  } else {
+    editFileError.value = result.error || 'Failed to update file share'
+  }
+
+  editingFile.value = false
 }
 </script>
