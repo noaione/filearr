@@ -228,7 +228,6 @@ const loadFolder = async (path: string) => {
     ogTitle: 'filearr',
     description: 'stupidly simple file sharing',
     ogDescription: `viewing: /${currentPath.value}`,
-    twitterCard: 'summary_large_image',
   })
 }
 
@@ -360,16 +359,10 @@ const backToBrowse = () => {
   viewThisFile.value = null
 }
 
-defineOgImageComponent('ShareView', {
-  name: data.value?.name || 'Shared Folder',
-  passwordProtected: data.value?.passwordProtected || false,
-  token,
-})
 useSeoMeta({
   title: `${data.value?.name || 'Shared Folder'} - /${currentPath.value}`,
   ogTitle: 'filearr',
   description: 'stupidly simple file sharing',
   ogDescription: 'stupidly simple file sharing',
-  twitterCard: 'summary_large_image',
 })
 </script>

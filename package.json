@@ -29,7 +29,6 @@
     "mime-types": "^3.0.2",
     "nanoid": "^5.1.6",
     "nuxt": "^4.2.2",
-    "nuxt-og-image": "5.1.13",
     "prisma": "^7.2.0",
     "typescript": "^5.6.3",
     "unstorage": "^1.15.0",

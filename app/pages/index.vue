@@ -40,6 +40,4 @@
 definePageMeta({
   layout: false
 })
-
-defineOgImageComponent('SimpleView')
 </script>

@@ -101,6 +101,4 @@ const handleLogin = async () => {
 
   loading.value = false
 }
-
-defineOgImageComponent('SimpleView')
 </script>

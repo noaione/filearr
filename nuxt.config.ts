@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   ssr: true,
-  modules: ['@nuxt/ui', '@nuxt/hints', '@pinia/nuxt', '@nuxt/icon', '@nuxt/fonts', "nuxt-og-image"],
+  modules: ['@nuxt/ui', '@nuxt/hints', '@pinia/nuxt', '@nuxt/icon', '@nuxt/fonts'],
   css: ['~/assets/css/main.css'],
   app: {
     head: {
@@ -143,17 +143,5 @@ export default defineNuxtConfig({
       weights: [300, 400, 500, 600, 700, 800],
       styles: ['normal', 'italic'],
     }
-  },
-  ogImage: {
-    satoriOptions: {
-      debug: true,
-      embedFont: true,
-    },
-    fonts: [
-      'JetBrains Mono:400',
-      'JetBrains Mono:600',
-      'JetBrains Mono:700',
-      'JetBrains Mono:800',
-    ]
   }
 })
