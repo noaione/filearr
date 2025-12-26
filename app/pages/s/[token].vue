@@ -1,7 +1,7 @@
 <template>
   <div v-if="!firstLoad" class="min-h-screen flex justify-center p-4 w-full" :class="{
-    'items-center': !verified,
-    'flex-col h-screen': verified
+    'items-center': !verified || viewThisFile,
+    'flex-col h-screen': verified,
   }">
     <!-- Password Prompt -->
     <UCard v-if="!verified" class="w-full max-w-md bg-gray-950 border border-gray-800">
@@ -20,7 +20,7 @@
       </form>
     </UCard>
     <!-- File Browser -->
-    <div v-else class="w-full flex flex-col h-full overflow-hidden">
+    <div v-else-if="!viewThisFile" class="w-full flex flex-col h-full overflow-hidden">
       <!-- Fixed Header -->
       <div class="bg-gray-950 border border-gray-800 rounded-t-lg p-4 sm:p-6 shrink-0">
         <div class="space-y-3">
@@ -95,13 +95,13 @@
         <div class="space-y-2">
           <div v-if="browseLoading" class="text-center py-12 text-gray-500">Loading...</div>
           <div v-else-if="items.length === 0">
-            <FileDetail v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
+            <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
             <div class="text-center py-12 text-gray-500">This folder is empty</div>
           </div>
           <div v-else-if="items.length === 0" class="text-center py-12 text-gray-500">This folder is empty</div>
           <div v-else class="space-y-1">
-            <FileDetail v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
-            <FileDetail 
+            <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
+            <FileRow 
               v-for="item in items" 
               :key="item.path" 
               :item="item" 
@@ -110,14 +110,19 @@
               @navigate="navigateToFolder" 
               @download="downloadFile"
               @toggle-select="toggleFileSelection"
+              @view-file="viewFileInfo"
             />
           </div>
         </div>
       </div>
     </div>
+
+    <!-- File Detail View -->
+    <FileInfo v-else-if="viewThisFile" :token="token" :item="viewThisFile" @download="downloadFile" @goBack="backToBrowse" />
   </div>
 </template>
 <script setup lang="ts">
+import FileInfo from '~/components/FileInfo.vue'
 import type { BrowseItem } from '~~/server/api/share/[token]/browse.get'
 
 definePageMeta({
@@ -144,6 +149,7 @@ const downloadingAll = ref(false)
 const selectionMode = ref(false)
 const selectedFiles = ref<Set<string>>(new Set())
 const downloadingSelected = ref(false)
+const viewThisFile = ref<BrowseItem | null>(null)
 
 const fileCount = computed(() => items.value.filter(i => i.isFile).length)
 
@@ -337,5 +343,13 @@ const downloadSelectedFiles = async () => {
   } finally {
     downloadingSelected.value = false
   }
+}
+
+const viewFileInfo = (item: BrowseItem) => {
+  viewThisFile.value = item
+}
+
+const backToBrowse = () => {
+  viewThisFile.value = null
 }
 </script>

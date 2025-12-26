@@ -15,8 +15,9 @@
       v-else
       class="flex flex-col sm:flex-row sm:items-center gap-3 px-3 py-4"
       :class="{
-        'cursor-pointer': selectionMode
+        'cursor-pointer': selectionMode || !selectionMode
       }"
+      @click="!selectionMode && $emit('viewFile', item)"
     >
       <div class="flex items-start gap-3 flex-1 min-w-0">
         <UCheckbox
@@ -63,6 +64,7 @@ defineEmits<{
   navigate: [path: string];
   download: [path: string];
   toggleSelect: [path: string];
+  viewFile: [item: BrowseItem];
 }>();
 
 const formatSize = (bytes: number) => {
