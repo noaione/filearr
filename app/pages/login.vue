@@ -9,7 +9,7 @@
       </template>
 
       <form @submit.prevent="handleLogin" class="space-y-4">
-        <UFormGroup label="Username" required>
+        <UFormField label="Username" required>
           <UInput
             v-model="username"
             type="text"
@@ -17,18 +17,20 @@
             autofocus
             autocomplete="username"
             :disabled="loading"
+            class="w-full"
           />
-        </UFormGroup>
+        </UFormField>
 
-        <UFormGroup label="Password" required>
+        <UFormField label="Password" required>
           <UInput
             v-model="password"
             type="password"
             placeholder="••••••••"
             autocomplete="current-password"
+            class="w-full"
             :disabled="loading"
           />
-        </UFormGroup>
+        </UFormField>
 
         <div v-if="error" class="text-red-500 text-sm mt-2">
           {{ error }}

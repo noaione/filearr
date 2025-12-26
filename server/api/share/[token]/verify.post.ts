@@ -1,5 +1,6 @@
 import prisma from '@@/server/utils/db'
 import { comparePassword } from '@@/server/utils/auth'
+import { getSessionShare } from '~~/server/utils/session'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
@@ -7,6 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!token) {
     throw createError({
       statusCode: 400,
+      statusMessage: 'Bad Request',
       message: 'Share token is required',
     })
   }
@@ -18,6 +20,7 @@ export default defineEventHandler(async (event) => {
   if (!share) {
     throw createError({
       statusCode: 404,
+      statusMessage: 'Not Found',
       message: 'Share not found',
     })
   }
@@ -26,6 +29,7 @@ export default defineEventHandler(async (event) => {
   if (share.expiresAt && share.expiresAt < new Date()) {
     throw createError({
       statusCode: 410,
+      statusMessage: 'Gone',
       message: 'Share has expired',
     })
   }
@@ -37,6 +41,7 @@ export default defineEventHandler(async (event) => {
     if (!password) {
       throw createError({
         statusCode: 401,
+        statusMessage: 'Unauthorized',
         message: 'Password required',
       })
     }
@@ -45,10 +50,15 @@ export default defineEventHandler(async (event) => {
     if (!valid) {
       throw createError({
         statusCode: 401,
+        statusMessage: 'Unauthorized',
         message: 'Invalid password',
       })
     }
   }
+
+  const session = await getSessionShare(event, share.id)
+  session.shareId = share.id
+  await session.save()
 
   return {
     id: share.id,

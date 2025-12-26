@@ -7,6 +7,10 @@ export interface SessionData {
   isLoggedIn: boolean
 }
 
+export interface ShareSessionData {
+  shareId: string
+}
+
 const sessionOptions = {
   password: process.env.SESSION_SECRET || 'change-me-in-production-please-really-long-secret',
   cookieName: 'filearr_session',
@@ -29,5 +33,18 @@ export async function getSession(event: H3Event): Promise<IronSession<SessionDat
     session.isLoggedIn = false
   }
   
+  return session
+}
+
+export async function getSessionShare(event: H3Event, shareId: string): Promise<IronSession<ShareSessionData>> {
+  const session = await getIronSession<ShareSessionData>(
+    event.node.req,
+    event.node.res,
+    {
+      ...sessionOptions,
+      cookieName: `farr_share_${shareId}`,
+    }
+  )
+
   return session
 }

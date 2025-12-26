@@ -2,6 +2,7 @@ import { readdir } from 'fs/promises'
 import { join } from 'path'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
+import { getSessionShare } from '~~/server/utils/session'
 
 export type BrowseItem = {
   name: string
@@ -33,6 +34,14 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 404,
       message: 'Share not found',
+    })
+  }
+
+  const session = await getSessionShare(event, share.id)
+  if (session.shareId !== share.id) {
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized access to share',
     })
   }
 
