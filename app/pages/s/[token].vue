@@ -29,15 +29,14 @@
             <h2 class="text-xl sm:text-2xl font-bold tracking-wider truncate">{{ shareName }}</h2>
             <div class="flex items-center gap-2">
               <UButton
-                v-if="currentPath"
-                @click="navigateUp"
+                @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
                 variant="ghost"
                 size="sm"
                 color="neutral"
-                icon="heroicons:arrow-up"
+                :icon="sortDirection === 'asc' ? 'heroicons:arrow-up' : 'heroicons:arrow-down'"
                 class="shrink-0 cursor-pointer"
               >
-                <span class="hidden sm:inline">Up</span>
+                <span class="hidden sm:inline">{{ sortDirection === 'asc' ? 'Ascending' : 'Descending' }}</span>
               </UButton>
               <UButton
                 v-if="selectionMode && selectedFiles.size < fileCount"
@@ -124,7 +123,7 @@
           <div v-else class="space-y-1">
             <FileRow v-if="currentPath" :item="SPECIAL_ACTION" @navigate="navigateUp" />
             <FileRow 
-              v-for="item in items" 
+              v-for="item in sortedItems" 
               :key="item.path" 
               :item="item" 
               :selection-mode="selectionMode"
@@ -177,8 +176,24 @@ const downloadingSelected = ref(false)
 const lastSelectedIndex = ref<number | null>(null)
 const viewThisFile = ref<BrowseItem | null>(null)
 const failureFirstLoad = ref<boolean>(false)
+const sortDirection = ref<'asc' | 'desc'>('asc')
 
 const fileCount = computed(() => items.value.filter(i => i.isFile).length)
+const sortedItems = computed(() => {
+  return items.value.slice().sort((a, b) => {
+    const nameA = a.name.toLowerCase()
+    const nameB = b.name.toLowerCase()
+    // sort by type first, folder before file
+    if (a.isDirectory && !b.isDirectory) return -1
+    if (!a.isDirectory && b.isDirectory) return 1
+    // then by name
+    if (sortDirection.value === 'asc') {
+      return nameA.localeCompare(nameB)
+    } else {
+      return nameB.localeCompare(nameA)
+    }
+  })
+})
 
 const SPECIAL_ACTION = computed(() => {
   const naming = failureFirstLoad.value ? 'Go to Root' : '..'
