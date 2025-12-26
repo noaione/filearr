@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises'
+import { readdir, realpath } from 'fs/promises'
 import { join } from 'path'
 import { requireAuth } from '@@/server/utils/auth';
 import { getSessionToken } from '@@/server/utils/session'
@@ -31,8 +31,9 @@ export default defineEventHandler(async (event) => {
   const items = await Promise.all(
     filteredEntries.map(async (entry) => {
       const itemPath = join(absolutePath, entry.name)
-      const stats = await getFileInfo(itemPath)
-      
+      const resolvedPath = await realpath(itemPath)
+      const stats = await getFileInfo(resolvedPath)
+
       return {
         name: entry.name,
         path: join(path, entry.name),

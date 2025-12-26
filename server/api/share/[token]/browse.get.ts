@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises'
+import { readdir, realpath } from 'fs/promises'
 import { join } from 'path'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
@@ -80,8 +80,9 @@ export default defineEventHandler(async (event) => {
   const items = await Promise.all(
     filteredEntries.map(async (entry) => {
       const itemPath = join(requestedPath, entry.name)
-      const stats = await getFileInfo(itemPath)
-      
+      const resolvedPath = await realpath(itemPath)
+      const stats = await getFileInfo(resolvedPath)
+
       return {
         name: entry.name,
         path: join(subPath, entry.name),
