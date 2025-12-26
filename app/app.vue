@@ -1,6 +1,8 @@
 <template>
   <UApp class="font-mono">
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </UApp>
 </template>
 

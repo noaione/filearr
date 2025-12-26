@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen p-4">
+  <div class="flex items-center justify-center min-h-dvh p-4">
     <div class="text-center space-y-8 max-w-2xl">
       <div>
         <h1 class="text-6xl font-extrabold tracking-wider mb-4">{{ $config.public.app.name }}</h1>

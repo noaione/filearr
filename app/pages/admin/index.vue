@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loadAuth" class="space-y-6 p-4">
+  <div v-if="!loadAuth" class="space-y-6">
     <div class="flex items-center justify-between mt-4">
       <div>
         <h2 class="text-2xl font-extrabold tracking-normal">Shared Folders</h2>
@@ -22,13 +22,6 @@
           >
           Share File
         </UButton>
-        <UButton
-          @click="logoutSession"
-          size="lg"
-          color="error"
-          variant="ghost"
-          icon="heroicons:arrow-left-start-on-rectangle"
-        />
       </div>
     </div>
 
@@ -213,35 +206,24 @@
       </div>
     </div>
 
-    <div class="flex flex-col w-full gap-2 sm:hidden justify-end items-end">
-      <div class="flex flex-row gap-2 w-full">
-        <UButton
-          @click="isCreateModalOpen = true"
-          size="lg"
-          color="primary"
-          icon="heroicons:folder-plus"
-          class="w-full"
-        >
-          Share Folder
-        </UButton>
-        <UButton
-          @click="isCreateFileShareModalOpen = true"
-          size="lg"
-          color="secondary"
-          icon="heroicons:document-plus"
-          class="w-full"
-        >
-          Share File
-        </UButton>
-      </div>
+    <div class="flex flex-row w-full gap-2 sm:hidden justify-end items-end">
       <UButton
-        @click="logoutSession"
+        @click="isCreateModalOpen = true"
         size="lg"
-        color="error"
-        variant="ghost"
-        icon="heroicons:arrow-left-start-on-rectangle"
+        color="primary"
+        icon="heroicons:folder-plus"
+        class="w-full"
       >
-        Logout
+        Share Folder
+      </UButton>
+      <UButton
+        @click="isCreateFileShareModalOpen = true"
+        size="lg"
+        color="secondary"
+        icon="heroicons:document-plus"
+        class="w-full"
+      >
+        Share File
       </UButton>
     </div>
 
@@ -901,12 +883,6 @@ const deleteShare = async (id: string) => {
       color: 'error'
     })
   }
-}
-
-const logoutSession = async () => {
-  await authStore.logout()
-
-  router.push('/')
 }
 
 // Copy URL

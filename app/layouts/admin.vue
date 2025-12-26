@@ -1,17 +1,15 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-dvh">
     <nav class="border-b border-gray-800 bg-gray-950">
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-4">
-            <h1 class="text-xl font-bold tracking-wider">filearr</h1>
-            <span class="text-gray-600">|</span>
-            <span class="text-gray-400 text-sm">admin</span>
+          <div class="flex items-center align-middle space-x-4">
+            <h1 class="text-xl font-bold tracking-wider">filearr <span class="text-gray-600 text-sm font-semibold">| <span class="text-gray-400">admin</span></span></h1>
           </div>
           <UButton
             @click="handleLogout"
             variant="ghost"
-            color="gray"
+            color="error"
             icon="heroicons:arrow-right-on-rectangle"
           >
             Logout
@@ -20,7 +18,7 @@
       </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 pt-4 pb-8">
       <NuxtPage />
     </div>
   </div>

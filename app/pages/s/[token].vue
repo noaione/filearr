@@ -1,7 +1,8 @@
 <template>
-  <div v-if="!firstLoad" class="min-h-screen flex justify-center p-4 w-full" :class="{
-    'items-center': !verified || viewThisFile,
-    'flex-col h-screen': verified,
+  <div v-if="!firstLoad" class="min-h-dvh flex justify-center p-4 w-full" :class="{
+    'sm:items-center': !verified || viewThisFile,
+    'flex-col': verified,
+    'h-dvh': !viewThisFile
   }">
     <!-- Password Prompt -->
     <UCard v-if="!verified" class="w-full max-w-md bg-gray-950 border border-gray-800">

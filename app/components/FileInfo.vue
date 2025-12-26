@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-3xl">
+  <div class="w-full sm:max-w-3xl">
     <UCard class="bg-gray-950 border border-gray-800">
       <template #header>
         <div class="flex items-start gap-3">

@@ -41,8 +41,8 @@
       </div>
       <UButton 
         v-if="!selectionMode"
-        @click="$emit('download', item.path)" 
-        class="font-bold tracking-wider cursor-pointer shrink-0 w-full sm:w-auto" 
+        @click="(ev) => { ev.stopPropagation(); $emit('download', item.path) }" 
+        class="font-bold tracking-wider cursor-pointer shrink-0 ring-gray-600 text-gray-300 w-full sm:w-auto" 
         variant="outline" 
         size="sm" 
         icon="heroicons:arrow-down-tray"

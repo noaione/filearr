@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!firstLoad" class="min-h-screen flex items-center justify-center p-4">
+  <div v-if="!firstLoad" class="min-h-dvh flex items-center justify-center p-4">
     <!-- Password Prompt -->
     <UCard v-if="!verified" class="w-full max-w-md bg-gray-950 border border-gray-800">
       <template #header>
