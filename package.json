@@ -1,7 +1,9 @@
 {
   "name": "filearr",
+  "description": "stupidly simple file sharing",
   "type": "module",
   "license": "0BSD",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",

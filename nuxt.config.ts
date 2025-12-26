@@ -1,3 +1,5 @@
+import packageJson from './package.json'
+
 const signatureExpiry = Number.parseInt(process.env.SIGNATURE_EXPIRY || '3600', 10) || 3600;
 
 if (signatureExpiry < 1) {
@@ -24,7 +26,11 @@ export default defineNuxtConfig({
     filesDirectory: process.env.FILES_DIRECTORY || './files',
     signatureExpiry,
     public: {
-      appName: 'filearr'
+      app: {
+        name: packageJson.name,
+        version: packageJson.version,
+        description: packageJson.description,
+      },
     }
   },
   nitro: {

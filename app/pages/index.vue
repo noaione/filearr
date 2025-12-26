@@ -1,9 +1,9 @@
 <template>
   <div class="flex items-center justify-center min-h-screen p-4">
     <div class="text-center space-y-8 max-w-2xl">
-      <div class="space-y-4">
-        <h1 class="text-6xl font-bold tracking-wider">filearr</h1>
-        <p class="text-gray-400 text-sm">stupidly simple file sharing server</p>
+      <div>
+        <h1 class="text-6xl font-extrabold tracking-wider mb-4">{{ $config.public.app.name }}</h1>
+        <p class="text-gray-400 text-sm font-semibold lowercase">{{ $config.public.app.description }}</p>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -13,6 +13,7 @@
           color="neutral"
           variant="outline"
           label="Admin Login"
+          class="font-bold"
           icon="i-heroicons-arrow-right-on-rectangle"
         />
         <UButton
@@ -21,13 +22,15 @@
           size="lg"
           color="neutral"
           variant="ghost"
+          class="font-bold"
           label="GitHub"
           icon="i-simple-icons-github"
         />
       </div>
 
-      <div class="text-xs text-gray-600 mt-12">
-        <p>v1.0.0</p>
+      <div class="text-xs text-gray-600 mt-8">
+        <p>v{{ $config.public.app.version }}</p>
+        <p class="mt-0.5">by noaione</p>
       </div>
     </div>
   </div>
