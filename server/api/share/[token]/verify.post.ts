@@ -34,8 +34,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const session = await getSessionShare(event, share.id)
+
   // Check if password is required
-  if (share.password) {
+  if (share.password && session.shareId !== share.id) {
     const { password } = await readBody(event)
     
     if (!password) {
@@ -56,7 +58,6 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const session = await getSessionShare(event, share.id)
   session.shareId = share.id
   await session.save()
 
@@ -64,7 +65,5 @@ export default defineEventHandler(async (event) => {
     id: share.id,
     name: share.name,
     shareToken: share.shareToken,
-    hasPassword: !!share.password,
-    expiresAt: share.expiresAt,
   }
 })

@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const expiry = getExpiryTime()
-  const signature = signFilePath(path, token, expiry, Boolean(bulk))
+  const signature = signFilePath(path, token, expiry, Boolean(bulk)).digest('hex')
   return {
     sig: signature,
     exp: expiry,

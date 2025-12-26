@@ -1,19 +1,21 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 w-full">
+  <div v-if="!firstLoad" class="min-h-screen flex justify-center p-4 w-full" :class="{
+    'items-center': !verified
+  }">
     <!-- Password Prompt -->
     <UCard v-if="!verified" class="w-full max-w-md bg-gray-950 border border-gray-800">
       <template #header>
         <div class="text-center">
-          <h2 class="text-2xl font-bold tracking-wider">{{ shareName || 'Shared Folder' }}</h2>
+          <h2 class="text-2xl font-extrabold tracking-wide">{{ shareName || 'Shared Folder' }}</h2>
           <p class="text-gray-500 text-sm mt-1">Enter password to access</p>
         </div>
       </template>
       <form @submit.prevent="handleVerify" class="space-y-4">
-        <UFormGroup label="Password" required>
-          <UInput v-model="password" type="password" placeholder="••••••••" autofocus :disabled="loading" />
-        </UFormGroup>
-        <div v-if="error" class="text-red-500 text-sm"> {{ error }} </div>
-        <UButton type="submit" block size="lg" :loading="loading" :disabled="!password"> Access </UButton>
+        <UFormField label="Password" required>
+          <UInput v-model="password" type="password" class="w-full" placeholder="••••••••" autofocus :disabled="loading" />
+        </UFormField>
+        <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
+        <UButton type="submit" block size="lg" class="cursor-pointer" :loading="loading" :disabled="!password"> Access </UButton>
       </form>
     </UCard>
     <!-- File Browser -->
@@ -74,7 +76,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { nanoid } from 'nanoid'
 import type { BrowseItem } from '~~/server/api/share/[token]/browse.get'
 
 definePageMeta({
@@ -86,6 +87,7 @@ const toast = useToast()
 
 const token = route.params.token as string
 
+const firstLoad = ref(true)
 const verified = ref(false)
 const shareName = ref('')
 const password = ref('')
@@ -117,14 +119,22 @@ onMounted(async () => {
       body: {}
     })
     shareName.value = data.name
-    if (!data.hasPassword) {
-      verified.value = true
-      loadFolder('')
-    }
+    verified.value = true
   } catch (err: any) {
     if (err.statusCode !== 401) {
       error.value = err.data?.message || 'Failed to access share'
+    } else if (err.statusCode === 401) {
+      // Requires password
+      verified.value = false
     }
+  } finally {
+    firstLoad.value = false
+  }
+
+  await nextTick();
+
+  if (verified.value) {
+    loadFolder('')
   }
 })
 
