@@ -1,11 +1,11 @@
 import prisma from '@@/server/utils/db'
 import { requireAuth } from '@@/server/utils/auth'
-import { getSession } from '@@/server/utils/session'
+import { getSessionToken } from '@@/server/utils/session'
 import { generateShareToken, sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
 import { hashPassword } from '@@/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
-  const session = await getSession(event)
+  const session = await getSessionToken(event)
   event.context.session = session
   requireAuth(event)
 

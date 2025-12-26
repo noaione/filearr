@@ -1,6 +1,6 @@
 import prisma from '@@/server/utils/db'
 import { hashPassword, comparePassword } from '@@/server/utils/auth'
-import { getSession } from '@@/server/utils/session'
+import { getSessionToken } from '@@/server/utils/session'
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event)
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Set session
-  const session = await getSession(event)
+  const session = await getSessionToken(event)
   session.userId = user.id
   session.username = user.username
   session.isLoggedIn = true

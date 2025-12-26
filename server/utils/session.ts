@@ -22,7 +22,7 @@ const sessionOptions = {
   },
 }
 
-export async function getSession(event: H3Event): Promise<IronSession<SessionData>> {
+export async function getSessionToken(event: H3Event): Promise<IronSession<SessionData>> {
   const session = await getIronSession<SessionData>(
     event.node.req,
     event.node.res,
