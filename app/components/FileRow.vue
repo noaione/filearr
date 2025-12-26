@@ -20,11 +20,11 @@
       @click="!selectionMode && $emit('viewFile', item)"
     >
       <div class="flex items-start gap-3 flex-1 min-w-0">
-        <UCheckbox
+        <StupidCheckbox
           v-if="selectionMode"
-          v-bind:model-value="isSelected"
-          @update:model-value="$emit('toggleSelect', item.path)"
-          class="mt-0.5"
+          :selected="isSelected"
+          @change="(shiftKey: boolean) => $emit('toggleSelect', item.path, shiftKey)"
+          class="mt-1"
         />
         <UIcon
           name="i-heroicons-document"
@@ -63,7 +63,7 @@ defineProps<{
 defineEmits<{
   navigate: [path: string];
   download: [path: string];
-  toggleSelect: [path: string];
+  toggleSelect: [path: string, shiftKey: boolean];
   viewFile: [item: BrowseItem];
 }>();
 

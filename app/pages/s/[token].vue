@@ -151,6 +151,7 @@ const downloadingAll = ref(false)
 const selectionMode = ref(false)
 const selectedFiles = ref<Set<string>>(new Set())
 const downloadingSelected = ref(false)
+const lastSelectedIndex = ref<number | null>(null)
 const viewThisFile = ref<BrowseItem | null>(null)
 
 const fileCount = computed(() => items.value.filter(i => i.isFile).length)
@@ -293,14 +294,38 @@ const toggleSelectionMode = () => {
   selectionMode.value = !selectionMode.value
   if (!selectionMode.value) {
     selectedFiles.value.clear()
+    lastSelectedIndex.value = null
   }
 }
 
-const toggleFileSelection = (path: string) => {
-  if (selectedFiles.value.has(path)) {
-    selectedFiles.value.delete(path)
+const toggleFileSelection = (path: string, shiftKey: boolean = false) => {
+  // Get only files (not directories)
+  const fileItems = items.value.filter(item => item.isFile)
+  const currentIndex = fileItems.findIndex(item => item.path === path)
+  
+  if (currentIndex === -1) return
+
+  // Handle shift-click for range selection
+  if (shiftKey && lastSelectedIndex.value !== null) {
+    const start = Math.min(lastSelectedIndex.value, currentIndex)
+    const end = Math.max(lastSelectedIndex.value, currentIndex)
+    
+    // Select all files in range
+    for (let i = start; i <= end; i++) {
+      const file = fileItems[i]
+      if (file) {
+        selectedFiles.value.add(file.path)
+      }
+    }
   } else {
-    selectedFiles.value.add(path)
+    // Normal toggle
+    if (selectedFiles.value.has(path)) {
+      selectedFiles.value.delete(path)
+      lastSelectedIndex.value = null
+    } else {
+      selectedFiles.value.add(path)
+      lastSelectedIndex.value = currentIndex
+    }
   }
 }
 
