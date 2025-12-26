@@ -4,6 +4,7 @@ stupidly simple file sharing server
 
 ## features
 - single admin user (with setup script)
+- file and folder sharing with unique tokens
 - password protected shares
 - bulk file downloads as zip
   - manual selection mode

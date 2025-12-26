@@ -39,3 +39,24 @@ model DownloadStat {
   ipAddress      String?
   userAgent      String?
 }
+
+model SharedFile {
+  id               String              @id @default(cuid())
+  name             String
+  path             String
+  shareToken       String              @unique
+  password         String?
+  expiresAt        DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  fileDownloadStats FileDownloadStat[]
+}
+
+model FileDownloadStat {
+  id            String     @id @default(cuid())
+  sharedFileId  String
+  sharedFile    SharedFile @relation(fields: [sharedFileId], references: [id], onDelete: Cascade)
+  downloadedAt  DateTime   @default(now())
+  ipAddress     String?
+  userAgent     String?
+}
