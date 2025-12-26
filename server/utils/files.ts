@@ -1,5 +1,5 @@
 import { createHmac, type Hmac, timingSafeEqual } from 'crypto'
-import { resolve, normalize, sep } from 'path'
+import { resolve, normalize } from 'path'
 import { stat, readdir } from 'fs/promises'
 import { nanoid } from 'nanoid'
 

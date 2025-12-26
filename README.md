@@ -7,12 +7,13 @@ stupidly simple file sharing server
 - password protected shares
 - bulk file downloads as zip
 - download statistics
+- fully local, no 3rd party services
 
 ## running
 1. install [Bun](https://bun.sh/)
 2. clone this repo
 3. run `bun install`
-4. run `bun run scripts/setup.mjs` to create admin user
+4. run `bun run scripts/setup.ts` to create admin user
 5. copy `.env.example` to `.env` and adjust settings
 6. generate secret with `openssl rand -base64 32` and set `SESSION_SECRET` in `.env`
 7. migrate database with `bunx prisma migrate dev`

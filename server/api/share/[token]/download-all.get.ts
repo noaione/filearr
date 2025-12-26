@@ -1,9 +1,10 @@
 import { createReadStream } from 'fs'
-import { readdir, stat } from 'fs/promises'
+import { readdir } from 'fs/promises'
 import { join, basename } from 'path'
 import archiver from 'archiver'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
+import { getUserIpAddress } from '~~/server/utils/ips'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
@@ -130,7 +131,7 @@ export default defineEventHandler(async (event) => {
     data: {
       sharedFolderId: share.id,
       fileName: `${folderPath || '/'} (${files.length} files)`,
-      ipAddress: getRequestIP(event) || 'unknown',
+      ipAddress: getUserIpAddress(event) || 'unknown',
       userAgent: headers['user-agent'] || 'unknown',
     },
   })

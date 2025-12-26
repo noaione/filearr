@@ -21,6 +21,7 @@
     "@types/archiver": "^7.0.0",
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.3",
+    "ip-address": "^10.1.0",
     "iron-session": "^8.0.4",
     "nanoid": "^5.1.6",
     "nuxt": "^4.2.2",
