@@ -1,5 +1,5 @@
 module.exports = {
-  title: "filearr", // Name of your application
+  name: "filearr", // Name of your application
   script: ".output/server/index.mjs", // Entry point of your application
   interpreter: "bun", // Bun interpreter
   env: {
