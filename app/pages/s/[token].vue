@@ -134,6 +134,8 @@ const toast = useToast()
 
 const token = route.params.token as string
 
+const { data, error: errorAPI } = await useFetch(`/api/share/${token}/info`)
+
 const firstLoad = ref(true)
 const verified = ref(false)
 const shareName = ref('')
@@ -164,25 +166,22 @@ const SPECIAL_ACTION: BrowseItem = {
 
 // Try to verify without password first
 onMounted(async () => {
-  try {
-    const data = await $fetch(`/api/share/${token}/verify`, {
-      method: 'POST',
-      body: {}
+  if (!data.value && errorAPI.value) {
+    toast.add({
+      title: 'Error',
+      description: errorAPI.value.data?.message || 'Failed to load share',
+      color: 'error'
     })
-    shareName.value = data.name
-    verified.value = true
-  } catch (err: any) {
-    if (err.statusCode !== 401) {
-      error.value = err.data?.message || 'Failed to access share'
-    } else if (err.statusCode === 401) {
-      // Requires password
-      verified.value = false
-    }
-  } finally {
     firstLoad.value = false
+    error.value = 'Failed to load share'
+    return
   }
 
-  await nextTick();
+  shareName.value = data.value?.name || 'Shared Folder'
+  firstLoad.value = false
+
+  verified.value = data.value?.isAuthenticated || false
+  await nextTick()
 
   if (verified.value) {
     loadFolder('')
@@ -223,6 +222,14 @@ const loadFolder = async (path: string) => {
   } finally {
     browseLoading.value = false
   }
+
+  useSeoMeta({
+    title: `${shareName.value} - /${currentPath.value}`,
+    ogTitle: 'filearr',
+    description: 'stupidly simple file sharing',
+    ogDescription: `viewing: /${currentPath.value}`,
+    twitterCard: 'summary_large_image',
+  })
 }
 
 const navigateToFolder = (path: string) => {
@@ -352,4 +359,17 @@ const viewFileInfo = (item: BrowseItem) => {
 const backToBrowse = () => {
   viewThisFile.value = null
 }
+
+defineOgImageComponent('ShareView', {
+  name: data.value?.name || 'Shared Folder',
+  passwordProtected: data.value?.passwordProtected || false,
+  token,
+})
+useSeoMeta({
+  title: `${data.value?.name || 'Shared Folder'} - /${currentPath.value}`,
+  ogTitle: 'filearr',
+  description: 'stupidly simple file sharing',
+  ogDescription: 'stupidly simple file sharing',
+  twitterCard: 'summary_large_image',
+})
 </script>

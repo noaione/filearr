@@ -290,6 +290,13 @@
 definePageMeta({
   layout: 'admin'
 })
+useSeoMeta({
+  title: 'filearr - Admin',
+  ogTitle: 'filearr - Admin',
+  description: 'manage your shared folders and links',
+  ogDescription: 'manage your shared folders and links',
+  twitterCard: 'summary_large_image',
+})
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -440,4 +447,6 @@ const copyUrl = (token: string) => {
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString()
 }
+
+defineOgImageComponent('SimpleView')
 </script>
