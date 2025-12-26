@@ -6,7 +6,10 @@ import { getSessionShare } from '~~/server/utils/session'
 import * as mimeTypes from 'mime-types'
 
 // add new type
-mimeTypes.types['.tgz'] = 'application/gzip'
+mimeTypes.types['tgz'] = 'application/gzip'
+mimeTypes.types['cbz'] = 'application/vnd.comicbook+zip'
+mimeTypes.types['cbr'] = 'application/vnd.comicbook+rar'
+mimeTypes.types['cb7'] = 'application/x-cb7'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
