@@ -110,6 +110,12 @@ export default defineEventHandler(async (event) => {
     zlib: { level: 9 }
   })
 
+  // Set response headers
+  setResponseHeaders(event, {
+    'Content-Type': 'application/zip',
+    'Content-Disposition': `attachment; filename="${encodeURIComponent(`${share.name}-selected.zip`)}"`,
+  })
+
   // Handle errors
   archive.on('error', (err) => {
     throw createError({
@@ -118,37 +124,24 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  // Set response headers
-  setResponseHeaders(event, {
-    'Content-Type': 'application/zip',
-    'Content-Disposition': `attachment; filename="${share.name}-selected.zip"`,
-  })
-
-  // Pipe archive to response
-  archive.pipe(event.node.res)
-
   // Add files to archive
   for (const file of validFiles) {
     archive.append(createReadStream(file.path), { name: file.name })
   }
 
   // Finalize archive
-  await archive.finalize()
+  archive.finalize()
 
   // Log download stat
-  try {
-    const userIp = getUserIpAddress(event)
-    await prisma.downloadStat.create({
-      data: {
-        sharedFolderId: share.id,
-        fileName: `${validFiles.length} selected files`,
-        downloadedAt: new Date(),
-        ipAddress: userIp,
-      },
-    })
-  } catch (err) {
-    console.error('Failed to log download stat:', err)
-  }
+  const headers = getHeaders(event)
+  await prisma.downloadStat.create({
+    data: {
+      sharedFolderId: share.id,
+      fileName: `${validFiles.length} selected files`,
+      ipAddress: getUserIpAddress(event) || 'unknown',
+      userAgent: headers['user-agent'] || 'unknown',
+    },
+  })
 
-  return event.node.res
+  return sendStream(event, archive)
 })
