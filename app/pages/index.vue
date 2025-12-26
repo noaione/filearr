@@ -3,7 +3,7 @@
     <div class="text-center space-y-8 max-w-2xl">
       <div class="space-y-4">
         <h1 class="text-6xl font-bold tracking-wider">filearr</h1>
-        <p class="text-gray-400 text-sm">simple file sharing server</p>
+        <p class="text-gray-400 text-sm">stupidly simple file sharing server</p>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -16,7 +16,7 @@
           icon="i-heroicons-arrow-right-on-rectangle"
         />
         <UButton
-          to="https://github.com"
+          to="https://github.com/noaione/filearr"
           target="_blank"
           size="lg"
           color="neutral"

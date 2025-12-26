@@ -2,14 +2,15 @@
   <div class="space-y-6 p-4">
     <div class="flex items-center justify-between mt-4">
       <div>
-        <h2 class="text-2xl font-bold tracking-wide">Shared Folders</h2>
-        <p class="text-gray-500 text-sm mt-1">Manage your shared folders and links</p>
+        <h2 class="text-2xl font-extrabold tracking-normal">Shared Folders</h2>
+        <p class="text-gray-400 text-sm mt-2 font-semibold tracking-wide">Manage your shared folders and links</p>
       </div>
       <UButton
         @click="isCreateModalOpen = true"
         size="lg"
         color="primary"
         icon="i-heroicons-plus"
+        class="hidden sm:flex"
       >
         Create Share
       </UButton>
@@ -45,8 +46,8 @@
         <div class="space-y-3">
           <div class="flex items-start justify-between">
             <div class="space-y-1 flex-1">
-              <h3 class="font-bold text-lg">{{ share.name }}</h3>
-              <p class="text-gray-500 text-sm font-mono">{{ share.path }}</p>
+              <h3 class="font-extrabold text-lg">{{ share.name }}</h3>
+              <p class="text-gray-500 text-sm font-mono mt-1.5 font-semibold">{{ share.path }}</p>
             </div>
             <UButton
               @click="deleteShare(share.id)"
@@ -93,6 +94,17 @@
       </UCard>
     </div>
 
+    <div class="flex flex-row w-full sm:hidden justify-end">
+      <UButton
+        @click="isCreateModalOpen = true"
+        size="lg"
+        color="primary"
+        icon="i-heroicons-plus"
+      >
+        Create Share
+      </UButton>
+    </div>
+
     <!-- Create Share Modal -->
     <UModal v-model:open="isCreateModalOpen">
       <template #content>
@@ -106,6 +118,7 @@
               <UInput
                 v-model="newShare.name"
                 placeholder="My Shared Folder"
+                class="w-full"
               />
             </UFormField>
   
@@ -113,7 +126,7 @@
               <div class="space-y-2">
                 <div class="flex gap-2">
                   <UInput
-                    v-model="browsePath"
+                    v-model="browsePathDisplay"
                     placeholder="/"
                     class="flex-1"
                     readonly
@@ -133,10 +146,9 @@
             <UFormField label="Password (optional)">
               <UInput
                 v-model="newShare.password"
-                type="password"
-                class="pr-4"
-                autocomplete="new-password"
-                
+                type="text"
+                class="w-full"
+                autocomplete="off"
                 placeholder="Leave empty for no password"
               />
             </UFormField>
@@ -145,6 +157,7 @@
               <UInput
                 v-model="newShare.expiresAt"
                 type="datetime-local"
+                class="w-full"
               />
             </UFormField>
   
@@ -236,6 +249,7 @@
               <UButton
                 @click="selectCurrentFolder"
                 class="flex-1"
+                color="neutral"
                 :disabled="!browsePath"
               >
                 Select Current Folder
@@ -245,7 +259,7 @@
                 variant="ghost"
                 color="secondary"
               >
-                Select
+                Cancel
               </UButton>
             </div>
           </template>
@@ -278,6 +292,10 @@ const browsePath = ref('')
 const browseItems = ref<any[]>([])
 const browseLoading = ref(false)
 const showHiddenAdmin = ref(false)
+
+const browsePathDisplay = computed(() => {
+  return `./${browsePath.value}`
+})
 
 // Load shares on mount
 onMounted(() => {

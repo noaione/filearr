@@ -3,6 +3,15 @@ import { join } from 'path'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory, getFileInfo } from '@@/server/utils/files'
 
+export type BrowseItem = {
+  name: string
+  path: string
+  isDirectory: boolean
+  isFile: boolean
+  size: number
+  modified: string
+}
+
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
   const query = getQuery(event)
@@ -70,8 +79,8 @@ export default defineEventHandler(async (event) => {
         isDirectory: entry.isDirectory(),
         isFile: entry.isFile(),
         size: stats.size,
-        modified: stats.modified,
-      }
+        modified: stats.modified.toUTCString(),
+      } as BrowseItem
     })
   )
 

@@ -1,4 +1,3 @@
-
 const signatureExpiry = Number.parseInt(process.env.SIGNATURE_EXPIRY || '3600', 10) || 3600;
 
 if (signatureExpiry < 1) {
@@ -10,7 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   ssr: false,
-  modules: ['@nuxt/ui', '@nuxt/hints', '@pinia/nuxt', '@nuxt/icon'],
+  modules: ['@nuxt/ui', '@nuxt/hints', '@pinia/nuxt', '@nuxt/icon', '@nuxt/fonts'],
   css: ['~/assets/css/main.css'],
   app: {
     head: {
@@ -30,5 +29,11 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'bun',
+  },
+  fonts: {
+    defaults: {
+      weights: [300, 400, 500, 600, 700, 800],
+      styles: ['normal', 'italic'],
+    }
   }
 })

@@ -1,10 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-* {
-  font-family: 'JetBrains Mono', monospace;
+@theme {
+  --font-mono: "JetBrains Mono", "monospace";
 }
+
+* {
+  @apply font-mono;
+}
+
 
 :root {
   --ui-primary: white;
