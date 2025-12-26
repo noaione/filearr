@@ -56,7 +56,7 @@
             variant="ghost"
             color="neutral"
             size="sm"
-            icon="i-heroicons-arrow-left"
+            icon="heroicons:arrow-left"
           >
             Back to Home
           </UButton>

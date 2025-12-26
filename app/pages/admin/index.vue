@@ -10,7 +10,7 @@
           @click="isCreateModalOpen = true"
           size="lg"
           color="primary"
-          icon="i-heroicons-folder-plus"
+          icon="heroicons:folder-plus"
           >
           Share Folder
         </UButton>
@@ -18,7 +18,7 @@
           @click="isCreateFileShareModalOpen = true"
           size="lg"
           color="secondary"
-          icon="i-heroicons-document-plus"
+          icon="heroicons:document-plus"
           >
           Share File
         </UButton>
@@ -27,7 +27,7 @@
           size="lg"
           color="error"
           variant="ghost"
-          icon="i-heroicons-arrow-left-start-on-rectangle"
+          icon="heroicons:arrow-left-start-on-rectangle"
         />
       </div>
     </div>
@@ -45,7 +45,7 @@
           @click="isCreateModalOpen = true"
           variant="outline"
           color="neutral"
-          icon="i-heroicons-plus"
+          icon="heroicons:plus"
         >
           Create Your First Share
         </UButton>
@@ -69,22 +69,22 @@
               @click="deleteShare(share.id)"
               color="error"
               variant="ghost"
-              icon="i-heroicons-trash"
+              icon="heroicons:trash"
               size="sm"
             />
           </div>
 
           <div class="flex items-center gap-4 text-xs text-gray-500">
             <div class="flex items-center gap-2">
-              <UIcon name="i-heroicons-arrow-down-tray" />
+              <UIcon name="heroicons:arrow-down-tray" />
               <span>{{ share.downloadCount ?? 0 }} downloads</span>
             </div>
             <div v-if="share.password" class="flex items-center gap-1">
-              <UIcon name="i-heroicons-lock-closed" />
+              <UIcon name="heroicons:lock-closed" />
               <span>Password protected</span>
             </div>
             <div v-if="share.expiresAt" class="flex items-center gap-1">
-              <UIcon name="i-heroicons-clock" />
+              <UIcon name="heroicons:clock" />
               <span>Expires {{ formatDate(share.expiresAt) }}</span>
             </div>
           </div>
@@ -100,7 +100,7 @@
               @click="copyUrl(share.shareToken)"
               variant="outline"
               color="neutral"
-              icon="i-heroicons-clipboard-document"
+              icon="heroicons:clipboard-document"
               size="sm"
             >
               Copy
@@ -127,7 +127,7 @@
             @click="isCreateFileShareModalOpen = true"
             variant="outline"
             color="neutral"
-            icon="i-heroicons-document-plus"
+            icon="heroicons:document-plus"
           >
             Share Your First File
           </UButton>
@@ -151,22 +151,22 @@
                 @click="deleteFileShare(share.id)"
                 color="error"
                 variant="ghost"
-                icon="i-heroicons-trash"
+                icon="heroicons:trash"
                 size="sm"
               />
             </div>
 
             <div class="flex items-center gap-4 text-xs text-gray-500">
               <div class="flex items-center gap-2">
-                <UIcon name="i-heroicons-arrow-down-tray" />
+                <UIcon name="heroicons:arrow-down-tray" />
                 <span>{{ share.downloadCount ?? 0 }} downloads</span>
               </div>
               <div v-if="share.password" class="flex items-center gap-1">
-                <UIcon name="i-heroicons-lock-closed" />
+                <UIcon name="heroicons:lock-closed" />
                 <span>Password protected</span>
               </div>
               <div v-if="share.expiresAt" class="flex items-center gap-1">
-                <UIcon name="i-heroicons-clock" />
+                <UIcon name="heroicons:clock" />
                 <span>Expires {{ formatDate(share.expiresAt) }}</span>
               </div>
             </div>
@@ -182,7 +182,7 @@
                 @click="copyFileUrl(share.shareToken)"
                 variant="outline"
                 color="neutral"
-                icon="i-heroicons-clipboard-document"
+                icon="heroicons:clipboard-document"
                 size="sm"
               >
                 Copy
@@ -199,7 +199,7 @@
           @click="isCreateModalOpen = true"
           size="lg"
           color="primary"
-          icon="i-heroicons-folder-plus"
+          icon="heroicons:folder-plus"
           class="w-full"
         >
           Share Folder
@@ -208,7 +208,7 @@
           @click="isCreateFileShareModalOpen = true"
           size="lg"
           color="secondary"
-          icon="i-heroicons-document-plus"
+          icon="heroicons:document-plus"
           class="w-full"
         >
           Share File
@@ -219,7 +219,7 @@
         size="lg"
         color="error"
         variant="ghost"
-        icon="i-heroicons-arrow-left-start-on-rectangle"
+        icon="heroicons:arrow-left-start-on-rectangle"
       >
         Logout
       </UButton>
@@ -255,7 +255,7 @@
                     @click="isBrowseModalOpen = true"
                     variant="outline"
                     color="neutral"
-                    icon="i-heroicons-folder"
+                    icon="heroicons:folder"
                   >
                     Browse
                   </UButton>
@@ -330,7 +330,7 @@
                   @click="navigateUp"
                   variant="ghost"
                   size="sm"
-                  icon="i-heroicons-arrow-up"
+                  icon="heroicons:arrow-up"
                 >
                   Up
                 </UButton>
@@ -358,7 +358,7 @@
                 @click="navigateToFolder(item.path)"
                 class="w-full flex items-center gap-2 p-3 hover:bg-gray-800 rounded border border-gray-800 text-left transition-colors"
               >
-                <UIcon name="i-heroicons-folder" class="text-yellow-500" />
+                <UIcon name="heroicons:folder" class="text-yellow-500" />
                 <span class="font-mono text-sm">{{ item.name }}</span>
               </button>
             </div>
@@ -417,7 +417,7 @@
                     @click="isBrowseFileModalOpen = true"
                     variant="outline"
                     color="neutral"
-                    icon="i-heroicons-document"
+                    icon="heroicons:document"
                   >
                     Browse
                   </UButton>
@@ -492,7 +492,7 @@
                   @click="navigateFileUp"
                   variant="ghost"
                   size="sm"
-                  icon="i-heroicons-arrow-up"
+                  icon="heroicons:arrow-up"
                 >
                   Up
                 </UButton>
@@ -521,7 +521,7 @@
                 class="w-full flex items-center gap-2 p-3 hover:bg-gray-800 rounded border border-gray-800 text-left transition-colors"
                 :class="{ 'bg-gray-800': selectedFilePath === item.path && item.isFile }"
               >
-                <UIcon :name="item.isDirectory ? 'i-heroicons-folder' : 'i-heroicons-document'" :class="item.isDirectory ? 'text-yellow-500' : 'text-blue-500'" />
+                <UIcon :name="item.isDirectory ? 'heroicons:folder' : 'heroicons:document'" :class="item.isDirectory ? 'text-yellow-500' : 'text-blue-500'" />
                 <span class="font-mono text-sm flex-1">{{ item.name }}</span>
                 <span v-if="item.isFile" class="text-xs text-gray-500">{{ formatFileSize(item.size) }}</span>
               </button>

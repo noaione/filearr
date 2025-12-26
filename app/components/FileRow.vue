@@ -6,7 +6,7 @@
       @click="$emit('navigate', item.path)" 
       class="flex items-start gap-3 w-full text-left cursor-pointer px-3 py-4"
     >
-      <UIcon :name="item.isGoUp ? 'i-heroicons-arrow-uturn-left' : 'i-heroicons-folder'" class="text-yellow-500 text-xl shrink-0 mt-0.5" />
+      <UIcon :name="item.isGoUp ? 'heroicons:arrow-uturn-left' : 'heroicons:folder'" class="text-yellow-500 text-xl shrink-0 mt-0.5" />
       <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
     </button>
     
@@ -26,7 +26,7 @@
           class="mt-1"
         />
         <UIcon
-          name="i-heroicons-document"
+          name="heroicons:document"
           class="text-gray-500 text-xl shrink-0 mt-0.5"
         />
         <div
@@ -45,7 +45,7 @@
         class="font-bold tracking-wider cursor-pointer shrink-0 w-full sm:w-auto" 
         variant="outline" 
         size="sm" 
-        icon="i-heroicons-arrow-down-tray"
+        icon="heroicons:arrow-down-tray"
       >
         Download
       </UButton>

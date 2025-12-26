@@ -14,7 +14,7 @@
           variant="outline"
           label="Admin Login"
           class="font-bold"
-          icon="i-heroicons-arrow-right-on-rectangle"
+          icon="heroicons:arrow-right-on-rectangle"
         />
         <UButton
           to="https://github.com/noaione/filearr"
@@ -24,7 +24,7 @@
           variant="ghost"
           class="font-bold"
           label="GitHub"
-          icon="i-simple-icons-github"
+          icon="simple-icons:github"
         />
       </div>
 

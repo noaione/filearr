@@ -33,7 +33,7 @@
                 variant="ghost"
                 size="sm"
                 color="neutral"
-                icon="i-heroicons-arrow-up"
+                icon="heroicons:arrow-up"
                 class="shrink-0 cursor-pointer"
               >
                 <span class="hidden sm:inline">Up</span>
@@ -44,7 +44,7 @@
                 variant="ghost"
                 size="sm"
                 color="primary"
-                icon="i-tabler-select-all"
+                icon="tabler:select-all"
                 class="shrink-0 cursor-pointer"
               >
                 <span class="hidden sm:inline">Select All</span>
@@ -55,7 +55,7 @@
                 variant="ghost"
                 size="sm"
                 color="primary"
-                icon="i-tabler-deselect"
+                icon="tabler:deselect"
                 class="shrink-0 cursor-pointer"
               >
                 <span class="hidden sm:inline">Deselect All</span>
@@ -65,7 +65,7 @@
                 variant="ghost"
                 size="sm"
                 :color="selectionMode ? 'primary' : 'neutral'"
-                :icon="selectionMode ? 'i-heroicons-check-circle' : 'i-heroicons-cursor-arrow-rays'"
+                :icon="selectionMode ? 'heroicons:check-circle' : 'heroicons:cursor-arrow-rays'"
                 class="shrink-0 cursor-pointer"
               >
                 <span class="hidden sm:inline">{{ selectionMode ? 'Cancel' : 'Select' }}</span>
@@ -76,7 +76,7 @@
                 variant="solid"
                 size="sm"
                 class="tracking-wide font-extrabold cursor-pointer shrink-0 text-xs sm:text-sm"
-                icon="i-heroicons-arrow-down-tray"
+                icon="heroicons:arrow-down-tray"
                 :loading="downloadingSelected"
               >
                 <span class="hidden sm:inline">Download ({{ selectedFiles.size }})</span>
@@ -88,7 +88,7 @@
                 variant="outline"
                 size="sm"
                 class="tracking-wide font-extrabold cursor-pointer shrink-0 text-xs sm:text-sm"
-                icon="i-heroicons-archive-box-arrow-down"
+                icon="heroicons:archive-box-arrow-down"
                 :loading="downloadingAll"
               >
                 <span class="hidden sm:inline">Download All ({{ fileCount }})</span>

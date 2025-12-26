@@ -22,12 +22,12 @@
 
       <div v-else class="space-y-4">
         <div class="text-center py-4">
-          <UIcon v-if="!error" name="i-heroicons-document" class="text-6xl text-blue-500 mx-auto mb-4" />
-          <UIcon v-if="error" name="i-fluent:document-split-hint-off-24-regular" class="text-6xl text-red-500 mx-auto mb-4" />
+          <UIcon v-if="!error" name="tabler:file" class="text-6xl text-blue-500 mx-auto mb-4" />
+          <UIcon v-if="error" name="tabler:file-off" class="text-6xl text-red-500 mx-auto mb-4" />
           <p v-if="filePath" class="text-gray-400 text-sm font-mono">{{ filePath }}</p>
           <div v-if="error" class="text-red-400 font-bold text-sm">{{ error }}</div>
         </div>
-        <UButton v-if="!error" @click="downloadFile" block size="lg" class="cursor-pointer" :loading="downloading" icon="i-heroicons-arrow-down-tray">
+        <UButton v-if="!error" @click="downloadFile" block size="lg" class="cursor-pointer" :loading="downloading" icon="tabler:download">
           Download File
         </UButton>
       </div>
@@ -44,7 +44,7 @@
 
       <div class="space-y-4">
         <div class="text-center py-4">
-          <UIcon name="i-heroicons-document-check" class="text-6xl text-green-500 mx-auto mb-4" />
+          <UIcon name="tabler:file-check" class="text-6xl text-green-500 mx-auto mb-4" />
           <p class="text-gray-400 text-sm font-bold tracking-wide font-mono">{{ filePath }}</p>
           <p class="text-gray-400 text-sm font-semibold tracking-wide mt-0.5 font-mono">{{ formatSize(fileSize) }}</p>
         </div>
@@ -53,7 +53,7 @@
           Expires {{ formatDate(expiresAt) }}
         </div>
 
-        <UButton @click="downloadFile" block size="lg" class="cursor-pointer" :loading="downloading" icon="i-heroicons-arrow-down-tray">
+        <UButton @click="downloadFile" block size="lg" class="cursor-pointer" :loading="downloading" icon="tabler:download">
           Download File
         </UButton>
       </div>

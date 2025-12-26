@@ -7,7 +7,7 @@
             @click="$emit('goBack')"
             variant="ghost"
             size="sm"
-            icon="i-heroicons-arrow-left"
+            icon="heroicons:arrow-left"
             class="shrink-0 cursor-pointer mt-1 font-bold"
           >
             Back
@@ -24,7 +24,7 @@
       <div v-else-if="currentFile" class="space-y-6">
         <!-- File Icon -->
         <div class="flex justify-center py-8">
-          <UIcon name="i-heroicons-document" class="text-gray-500 text-6xl" />
+          <UIcon name="heroicons:document" class="text-gray-500 text-6xl" />
         </div>
 
         <!-- File Information -->
@@ -52,7 +52,7 @@
             @click="$emit('download', currentFile.path)"
             block
             size="lg"
-            icon="i-heroicons-arrow-down-tray"
+            icon="heroicons:arrow-down-tray"
             class="font-bold tracking-wider cursor-pointer"
           >
             Download File
@@ -62,7 +62,7 @@
             block
             size="lg"
             variant="outline"
-            icon="i-heroicons-arrow-left"
+            icon="heroicons:arrow-left"
             class="font-bold tracking-wider cursor-pointer"
           >
             Back to Folder

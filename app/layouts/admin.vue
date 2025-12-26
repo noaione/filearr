@@ -12,7 +12,7 @@
             @click="handleLogout"
             variant="ghost"
             color="gray"
-            icon="i-heroicons-arrow-right-on-rectangle"
+            icon="heroicons:arrow-right-on-rectangle"
           >
             Logout
           </UButton>

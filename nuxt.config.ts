@@ -149,5 +149,18 @@ export default defineNuxtConfig({
       weights: [300, 400, 500, 600, 700, 800],
       styles: ['normal', 'italic'],
     }
+  },
+  icon: {
+    mode: 'svg',
+    provider: 'none',
+    serverBundle: false,
+    clientBundle: {
+      scan: {
+        // note that when you specify those values, the default behavior will be overridden
+        globInclude: ['app/components/**/*.vue', 'app/pages/**/*.vue'],
+        globExclude: ['node_modules', 'dist', /* ... */],
+      },
+      sizeLimitKb: 20
+    }
   }
 })
