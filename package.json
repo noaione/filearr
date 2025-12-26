@@ -1,6 +1,7 @@
 {
   "name": "filearr",
   "type": "module",
+  "license": "0BSD",
   "private": true,
   "scripts": {
     "build": "nuxt build",
