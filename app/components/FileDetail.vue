@@ -1,15 +1,34 @@
 <template>
-  <div class="flex items-center justify-between hover:bg-gray-800 rounded border border-gray-800 transition-colors">
-    <button v-if="item.isDirectory" @click="$emit('navigate', item.path)" class="flex items-center gap-3 flex-1 text-left cursor-pointer h-full px-3 py-4">
-      <UIcon name="i-heroicons-folder" class="text-yellow-500 text-xl ml-1" />
-      <span class="font-semibold">{{ item.name }}</span>
+  <div class="hover:bg-gray-800 rounded border border-gray-800 transition-colors">
+    <!-- Directory -->
+    <button 
+      v-if="item.isDirectory" 
+      @click="$emit('navigate', item.path)" 
+      class="flex items-start gap-3 w-full text-left cursor-pointer px-3 py-4"
+    >
+      <UIcon name="i-heroicons-folder" class="text-yellow-500 text-xl shrink-0 mt-0.5" />
+      <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
     </button>
-    <div v-else class="flex items-center gap-3 flex-1 mr-1 px-3 py-4">
-      <UIcon name="i-heroicons-document" class="text-gray-500 text-xl ml-1" />
-      <span class="font-semibold">{{ item.name }}</span>
-      <span class="text-gray-600 text-xs ml-auto">{{ formatSize(item.size) }}</span>
+    
+    <!-- File -->
+    <div v-else class="flex flex-col sm:flex-row sm:items-center gap-3 px-3 py-4">
+      <div class="flex items-start gap-3 flex-1 min-w-0">
+        <UIcon name="i-heroicons-document" class="text-gray-500 text-xl shrink-0 mt-0.5" />
+        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1 min-w-0">
+          <span class="font-semibold break-all sm:truncate">{{ item.name }}</span>
+          <span class="text-gray-600 text-xs shrink-0">{{ formatSize(item.size) }}</span>
+        </div>
+      </div>
+      <UButton 
+        @click="$emit('download', item.path)" 
+        class="font-bold tracking-wider cursor-pointer shrink-0 w-full sm:w-auto" 
+        variant="outline" 
+        size="sm" 
+        icon="i-heroicons-arrow-down-tray"
+      >
+        Download
+      </UButton>
     </div>
-    <UButton v-if="item.isFile" @click="$emit('download', item.path)" class="font-bold tracking-wider cursor-pointer mr-3 py-2" variant="outline" size="sm" icon="i-heroicons-arrow-down-tray">Download</UButton>
   </div>
 </template>
 

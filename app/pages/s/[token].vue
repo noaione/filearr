@@ -20,12 +20,12 @@
       </form>
     </UCard>
     <!-- File Browser -->
-    <div v-else class="w-full flex flex-col h-full overflow-x-hidden">
+    <div v-else class="w-full flex flex-col h-full overflow-hidden">
       <!-- Fixed Header -->
-      <div class="bg-gray-950 border border-gray-800 rounded-t-lg p-6 shrink-0">
+      <div class="bg-gray-950 border border-gray-800 rounded-t-lg p-4 sm:p-6 shrink-0">
         <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold tracking-wider">{{ shareName }}</h2>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+            <h2 class="text-xl sm:text-2xl font-bold tracking-wider truncate">{{ shareName }}</h2>
             <div class="flex items-center gap-2">
               <UButton
                 v-if="currentPath"
@@ -34,39 +34,42 @@
                 size="sm"
                 color="neutral"
                 icon="i-heroicons-arrow-up"
+                class="shrink-0 cursor-pointer"
               >
-                Up
+                <span class="hidden sm:inline">Up</span>
               </UButton>
               <UButton
                 v-if="!browseLoading && fileCount > 0"
                 @click="downloadAllFiles"
                 variant="outline"
                 size="sm"
-                class="tracking-wide font-extrabold"
+                class="tracking-wide font-extrabold cursor-pointer shrink-0 text-xs sm:text-sm"
                 icon="i-heroicons-archive-box-arrow-down"
                 :loading="downloadingAll"
               >
-                Download All ({{ fileCount }})
+                <span class="hidden sm:inline">Download All ({{ fileCount }})</span>
+                <span class="sm:hidden">All ({{ fileCount }})</span>
               </UButton>
             </div>
           </div>
-          <div class="flex items-center justify-between">
-            <p class="text-gray-500 text-sm font-mono">{{ `/${currentPath}` }}</p>
-            <label class="flex items-center gap-2 text-sm text-gray-400 font-semibold cursor-pointer">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between">
+            <p class="text-gray-500 text-xs sm:text-sm font-mono truncate">{{ `/${currentPath}` }}</p>
+            <label class="flex items-center gap-2 mt-2 sm:mt-0 text-xs sm:text-sm text-gray-400 font-semibold cursor-pointer shrink-0">
               <input
                 v-model="showHidden"
                 type="checkbox"
                 class="rounded bg-gray-800 border-gray-700 text-white focus:ring-white focus:ring-offset-gray-950"
                 @change="loadFolder(currentPath)"
               />
-              <span>Show hidden files</span>
+              <span class="hidden sm:inline">Show hidden files</span>
+              <span class="sm:hidden">Hidden</span>
             </label>
           </div>
         </div>
       </div>
 
       <!-- Scrollable Content -->
-      <div class="bg-gray-950 border-x border-b border-gray-800 rounded-b-lg p-6 flex-1 overflow-y-auto">
+      <div class="bg-gray-950 border-x border-b border-gray-800 rounded-b-lg p-4 sm:p-6 flex-1 overflow-scroll">
         <div class="space-y-2">
           <div v-if="browseLoading" class="text-center py-12 text-gray-500">Loading...</div>
           <div v-else-if="items.length === 0">
