@@ -5,7 +5,7 @@ import { getSessionToken } from '@@/server/utils/session'
 export default defineEventHandler(async (event) => {
   const session = await getSessionToken(event)
   event.context.session = session
-  requireAuth(event)
+  await requireAuth(event)
 
   const id = getRouterParam(event, 'id')
 

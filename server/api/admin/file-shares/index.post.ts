@@ -7,7 +7,7 @@ import { hashPassword } from '@@/server/utils/auth'
 export default defineEventHandler(async (event) => {
   const session = await getSessionToken(event)
   event.context.session = session
-  requireAuth(event)
+  await requireAuth(event)
 
   const { name, path, password, expiresAt } = await readBody(event)
 

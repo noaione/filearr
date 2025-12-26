@@ -7,7 +7,7 @@ import { getFilesDirectory, sanitizePath, getFileInfo } from '@@/server/utils/fi
 export default defineEventHandler(async (event) => {
   const session = await getSessionToken(event)
   event.context.session = session
-  requireAuth(event)
+  await requireAuth(event)
 
   const query = getQuery(event)
   const path = (query.path as string) || ''
