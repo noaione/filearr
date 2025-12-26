@@ -137,6 +137,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'bun',
+    experimental: {
+      tasks: true
+    },
+    scheduledTasks: {
+      '0 0 * * *': ['db:cleanup']
+    }
   },
   fonts: {
     defaults: {
