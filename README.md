@@ -14,14 +14,15 @@ stupidly simple file sharing server
 ## running
 1. install [Bun](https://bun.sh/)
 2. clone this repo
-3. run `bun install`
-4. run `bun run scripts/setup.ts` to create admin user
-5. copy `.env.example` to `.env` and adjust settings
-6. generate secret with `openssl rand -base64 32` and set `SESSION_SECRET` in `.env`
-7. migrate database with `bunx prisma migrate dev`
-8. run `bun run dev` to start development server
+3. copy `.env.example` to `.env` and adjust settings
+4. generate secret with `openssl rand -base64 32` and set `SESSION_SECRET` in `.env`
+5. run `bun install`
+6. migrate database with `bunx prisma migrate dev`
+7. run `bunx prisma generate` to generate prisma client
+8. run `bun run scripts/setup.ts` to create admin user
+9. run `bun run dev` to start development server
     - or: `bun run build` then `bun .output/server/index.mjs` for production
-9. visit `http://localhost:4896` (or your set `PORT`)
+10. visit `http://localhost:4896` (or your set `PORT`)
 
 ## license
 0BSD. See LICENSE file.
