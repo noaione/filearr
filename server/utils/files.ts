@@ -1,6 +1,6 @@
 import { createHmac, type Hmac, timingSafeEqual } from 'crypto'
 import { resolve, normalize } from 'path'
-import { stat, readdir } from 'fs/promises'
+import { stat, readdir, realpath } from 'fs/promises'
 import { nanoid } from 'nanoid'
 
 const config = useRuntimeConfig()
@@ -70,7 +70,8 @@ export function verifyFileSignature(path: string, shareToken: string, signature:
  */
 export async function getFileInfo(absolutePath: string) {
   try {
-    const stats = await stat(absolutePath)
+    const realPath = await realpath(absolutePath)
+    const stats = await stat(realPath)
     return {
       isDirectory: stats.isDirectory(),
       isFile: stats.isFile(),
