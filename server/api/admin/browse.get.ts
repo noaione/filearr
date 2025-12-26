@@ -31,14 +31,13 @@ export default defineEventHandler(async (event) => {
   const items = await Promise.all(
     filteredEntries.map(async (entry) => {
       const itemPath = join(absolutePath, entry.name)
-      const resolvedPath = await realpath(itemPath)
-      const stats = await getFileInfo(resolvedPath)
+      const stats = await getFileInfo(itemPath)
 
       return {
         name: entry.name,
         path: join(path, entry.name),
-        isDirectory: entry.isDirectory(),
-        isFile: entry.isFile(),
+        isDirectory: stats.isDirectory,
+        isFile: stats.isFile,
         size: stats.size,
         modified: stats.modified,
       }

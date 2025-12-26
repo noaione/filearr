@@ -87,7 +87,21 @@ export default defineEventHandler(async (event) => {
 
   // Get all files in the directory (not subdirectories)
   const entries = await readdir(requestedPath, { withFileTypes: true })
-  const files = entries.filter(entry => entry.isFile() && !entry.name.startsWith('.'))
+  const files = []
+  for (const entry of entries) {
+    if (!entry.name.startsWith('.')) continue // skip hidden files
+
+    if (entry.isFile()) {
+      files.push(entry) // direct file
+    } else if (entry.isSymbolicLink()) {
+      // follow first
+      const fullPath = join(requestedPath, entry.name)
+      const stats = await getFileInfo(fullPath) // resolve symlink
+      if (stats.isFile) {
+        files.push(entry) // add if it's a file
+      }
+    }
+  }
 
   if (files.length === 0) {
     throw createError({

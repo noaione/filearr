@@ -87,25 +87,6 @@ export async function getFileInfo(absolutePath: string) {
 }
 
 /**
- * List directory contents
- */
-export async function listDirectory(absolutePath: string) {
-  try {
-    const entries = await readdir(absolutePath, { withFileTypes: true })
-    return entries.map(entry => ({
-      name: entry.name,
-      isDirectory: entry.isDirectory(),
-      isFile: entry.isFile(),
-    }))
-  } catch (error) {
-    throw createError({
-      statusCode: 500,
-      message: 'Failed to read directory',
-    })
-  }
-}
-
-/**
  * Get the configured files directory
  */
 export function getFilesDirectory(): string {
