@@ -1,5 +1,5 @@
 import { join, extname } from 'path'
-import { stat } from 'fs/promises'
+import { realpath, stat } from 'fs/promises'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory } from '@@/server/utils/files'
 import { getSessionShare } from '~~/server/utils/session'
@@ -63,7 +63,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const fileStats = await stat(requestedPath)
+    const followPath = await realpath(requestedPath)
+    const fileStats = await stat(followPath)
 
     if (!fileStats.isFile()) {
       throw createError({
