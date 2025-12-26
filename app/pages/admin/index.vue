@@ -1,19 +1,27 @@
 <template>
-  <div class="space-y-6 p-4">
+  <div v-if="!loadAuth" class="space-y-6 p-4">
     <div class="flex items-center justify-between mt-4">
       <div>
         <h2 class="text-2xl font-extrabold tracking-normal">Shared Folders</h2>
         <p class="text-gray-400 text-sm mt-2 font-semibold tracking-wide">Manage your shared folders and links</p>
       </div>
-      <UButton
-        @click="isCreateModalOpen = true"
-        size="lg"
-        color="primary"
-        icon="i-heroicons-plus"
-        class="hidden sm:flex"
-      >
-        Create Share
-      </UButton>
+      <div class="hidden sm:flex sm:flex-row sm:gap-2">
+        <UButton
+          @click="isCreateModalOpen = true"
+          size="lg"
+          color="primary"
+          icon="i-heroicons-plus"
+          >
+          Create Share
+        </UButton>
+        <UButton
+          @click="logoutSession"
+          size="lg"
+          color="error"
+          variant="ghost"
+          icon="i-heroicons-arrow-left-start-on-rectangle"
+        />
+      </div>
     </div>
 
     <!-- Loading State -->
@@ -94,7 +102,16 @@
       </UCard>
     </div>
 
-    <div class="flex flex-row w-full sm:hidden justify-end">
+    <div class="flex flex-row w-full gap-2 sm:hidden justify-end">
+      <UButton
+        @click="logoutSession"
+        size="lg"
+        color="error"
+        variant="ghost"
+        icon="i-heroicons-arrow-left-start-on-rectangle"
+      >
+        Logout
+      </UButton>
       <UButton
         @click="isCreateModalOpen = true"
         size="lg"
@@ -274,9 +291,12 @@ definePageMeta({
   layout: 'admin'
 })
 
+const authStore = useAuthStore()
+const router = useRouter()
 const sharesStore = useSharesStore()
 const toast = useToast()
 
+const loadAuth = ref(true)
 const isCreateModalOpen = ref(false)
 const isBrowseModalOpen = ref(false)
 const creating = ref(false)
@@ -298,8 +318,18 @@ const browsePathDisplay = computed(() => {
 })
 
 // Load shares on mount
-onMounted(() => {
-  sharesStore.fetchShares()
+onMounted(async () => {
+  try {
+    await authStore.checkAuth()
+    if (authStore.isLoggedIn) {
+      loadAuth.value = false
+      sharesStore.fetchShares()
+    } else {
+      router.push('/login')
+    }
+  } catch {
+    router.push('/login')
+  }
 })
 
 // Browse functionality
@@ -387,6 +417,12 @@ const deleteShare = async (id: string) => {
       color: 'error'
     })
   }
+}
+
+const logoutSession = async () => {
+  await authStore.logout()
+
+  router.push('/')
 }
 
 // Copy URL
