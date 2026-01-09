@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const session = await getSessionShare(event, share.id)
-  if (session.shareId !== share.id) {
+  if (share.password && session.shareId !== share.id) {
     throw createError({
       statusCode: 401,
       message: 'Unauthorized access to share',
