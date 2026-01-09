@@ -224,7 +224,7 @@ onMounted(async () => {
   shareName.value = data.value?.name || 'Shared Folder'
   firstLoad.value = false
 
-  verified.value = data.value?.isAuthenticated || false
+  verified.value = data.value?.passwordProtected === false ? true : (data.value?.isAuthenticated || false)
   await nextTick()
 
   if (verified.value) {
