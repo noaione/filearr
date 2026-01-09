@@ -25,9 +25,9 @@
       <!-- Fixed Header -->
       <div class="bg-gray-950 border border-gray-800 rounded-t-lg p-4 sm:p-6 shrink-0">
         <div class="space-y-3">
-          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between w-full pr-4">
             <h2 class="text-xl sm:text-2xl font-bold tracking-wider truncate">{{ shareName }}</h2>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 min-w-fit">
               <UButton
                 @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
                 variant="ghost"
