@@ -66,6 +66,7 @@ definePageMeta({
   layout: false
 })
 
+const config = useRuntimeConfig()
 const route = useRoute()
 const toast = useToast()
 const token = route.params.token as string
@@ -183,5 +184,12 @@ useSeoMeta({
   ogTitle: `filearr - ${shareName.value || 'Shared File'}`,
   description: 'Download shared file',
   ogDescription: 'Download shared file',
+  ogUrl: `${config.public.siteUrl}/t/${token}`,
+  ogImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  ogType: 'website',
+  twitterTitle: `filearr - ${shareName.value || 'Shared File'}`,
+  twitterDescription: `Download shared file`,
+  twitterImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  twitterCard: 'summary'
 })
 </script>

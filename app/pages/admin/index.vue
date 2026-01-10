@@ -708,6 +708,7 @@ useSeoMeta({
   ogDescription: 'manage your shared folders and links',
 })
 
+const config = useRuntimeConfig()
 const authStore = useAuthStore()
 const router = useRouter()
 const sharesStore = useSharesStore()
@@ -790,6 +791,20 @@ onMounted(async () => {
       loadAuth.value = false
       sharesStore.fetchShares()
       sharesStore.fetchFileShares()
+
+      useSeoMeta({
+        title: 'filearr - Admin',
+        description: 'stupidly simple file sharing server',
+        ogTitle: 'filearr - Admin',
+        ogDescription: 'stupidly simple file sharing server',
+        ogUrl: config.public.siteUrl + '/admin',
+        ogImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+        ogType: 'website',
+        twitterTitle: 'filearr - Admin',
+        twitterDescription: 'stupidly simple file sharing server',
+        twitterImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+        twitterCard: 'summary'
+      })
     } else {
       router.push('/login')
     }

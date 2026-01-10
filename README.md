@@ -1,4 +1,6 @@
-# filearr
+<h1>
+<img src="https://raw.githubusercontent.com/noaione/filearr/refs/heads/main/public/assets/favicons/android-chrome-96x96.png" alt="filearr Logo" width="32" height="32"> filearr
+</h1>
 
 stupidly simple file sharing server
 
@@ -27,6 +29,9 @@ stupidly simple file sharing server
 
 ## license
 0BSD. See LICENSE file.
+
+Font in icon is [Monaspace Xenon](https://monaspace.githubnext.com/) by GitHub Next and Lettermatic.<br />
+The icon itself is licensed under [CC0](https://creativecommons.org/public-domain/cc0/)
 
 ## disclaimer
 this project is vibe coded then manually cleaned up and checked for any security issues. use at your own risk. no warranties given.

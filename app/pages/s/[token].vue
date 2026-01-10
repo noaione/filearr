@@ -152,6 +152,7 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const config = useRuntimeConfig()
 
 const path = route.query.path as string || ''
 const token = route.params.token as string
@@ -286,6 +287,13 @@ const loadFolder = async (path: string, isFirstMount = false) => {
     ogTitle: 'filearr',
     description: 'stupidly simple file sharing',
     ogDescription: `viewing: /${currentPath.value}`,
+    ogUrl: `${config.public.siteUrl}/s/${token}`,
+    ogImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+    ogType: 'website',
+    twitterTitle: `${shareName.value} - /${currentPath.value}`,
+    twitterDescription: `viewing /${currentPath.value}`,
+    twitterImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+    twitterCard: 'summary'
   })
   router.push({
     query: currentPath.value ? { path: currentPath.value } : {}

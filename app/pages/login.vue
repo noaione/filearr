@@ -71,6 +71,7 @@ definePageMeta({
   layout: false
 })
 
+const config = useRuntimeConfig()
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -101,4 +102,24 @@ const handleLogin = async () => {
 
   loading.value = false
 }
+
+useSeoMeta({
+  title: 'filearr - Admin Login',
+  description: 'stupidly simple file sharing server',
+  ogTitle: 'filearr - Admin Login',
+  ogDescription: 'stupidly simple file sharing server',
+  ogUrl: config.public.siteUrl + '/login',
+  ogImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  ogType: 'website',
+  twitterTitle: 'filearr - Admin Login',
+  twitterDescription: 'stupidly simple file sharing server',
+  twitterImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en',
+  },
+})
 </script>

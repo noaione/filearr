@@ -40,4 +40,26 @@
 definePageMeta({
   layout: false
 })
+
+const config = useRuntimeConfig()
+
+useSeoMeta({
+  title: 'filearr',
+  description: 'stupidly simple file sharing server',
+  ogTitle: 'filearr',
+  ogDescription: 'stupidly simple file sharing server',
+  ogUrl: config.public.siteUrl,
+  ogImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  ogType: 'website',
+  twitterTitle: 'filearr',
+  twitterDescription: 'stupidly simple file sharing server',
+  twitterImage: `${config.public.siteUrl}/assets/favicons/android-chrome-512x512.png`,
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en',
+  },
+})
 </script>

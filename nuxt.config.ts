@@ -29,6 +29,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'en',
+      },
       title: packageJson.name,
       meta: [
         {
@@ -66,6 +69,11 @@ export default defineNuxtConfig({
           rel: "apple-touch-icon",
           sizes: "180x180",
           href: "/assets/favicons/apple-touch-icon.png",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/assets/favicons/base.png",
         },
         {
           rel: "icon",
@@ -120,6 +128,7 @@ export default defineNuxtConfig({
         version: packageJson.version,
         description: packageJson.description,
       },
+      siteUrl: process.env.SITE_URL || 'http://localhost:3000',
     }
   },
   nitro: {
