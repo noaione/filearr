@@ -15,17 +15,16 @@ stupidly simple file sharing server
 - fully local, no 3rd party services
 
 ## running
-1. install [Bun](https://bun.sh/)
-2. clone this repo
-3. copy `.env.example` to `.env` and adjust settings
-4. generate secret with `openssl rand -base64 32` and set `SESSION_SECRET` in `.env`
-5. run `bun install`
-6. migrate database with `bunx prisma migrate dev`
-7. run `bunx prisma generate` to generate prisma client
-8. run `bun run scripts/setup.ts` to create admin user
-9. run `bun run dev` to start development server
-    - or: `bun run build` then `bun .output/server/index.mjs` for production
-10. visit `http://localhost:4896` (or your set `PORT`)
+1. clone this repo
+2. copy `.env.example` to `.env` and adjust settings
+3. generate secret with `openssl rand -base64 32` and set `SESSION_SECRET` in `.env`
+4. run `pnpm install --frozen-lockfile`
+5. migrate database with `pnpx prisma migrate dev`
+6. run `pnpx prisma generate` to generate prisma client
+7. run `pnpm run scripts/setup.ts` to create admin user
+8. run `pnpm run dev` to start development server
+    - or: `pnpm run build` then `node .output/server/index.mjs` for production
+9. visit `http://localhost:4896` (or your set `PORT`)
 
 ## license
 0BSD. See LICENSE file.

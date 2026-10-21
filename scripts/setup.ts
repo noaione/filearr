@@ -16,7 +16,7 @@ const rl = createInterface({
   output: process.stdout
 })
 
-const question = (query) => new Promise((resolve) => rl.question(query, resolve))
+const question = (query: string): Promise<string> => new Promise((resolve) => rl.question(query, resolve))
 
 async function setup() {
   console.log('\n🚀 filearr Setup\n')
@@ -61,7 +61,7 @@ async function setup() {
   console.log(`   Username: ${username}`)
   console.log('\n📁 Make sure to create a "files" directory or set FILES_DIRECTORY environment variable')
   console.log('🔐 For production, set a strong SESSION_SECRET environment variable')
-  console.log('\nYou can now start the application with: bun run dev\n')
+  console.log('\nYou can now start the application with: pnpm run dev\n')
 
   rl.close()
 }
