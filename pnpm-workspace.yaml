@@ -1,0 +1,8 @@
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  vue-demi: true
+permissions:
+  '@unhead/vue':
+    skills: true

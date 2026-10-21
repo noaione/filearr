@@ -1,6 +1,6 @@
 import { createReadStream } from 'fs'
 import { join, basename } from 'path'
-import archiver from 'archiver'
+import { ZipArchive } from 'archiver'
 import prisma from '@@/server/utils/db'
 import { sanitizePath, getFilesDirectory, getFileInfo, precheckFilesSize } from '@@/server/utils/files'
 import { getUserIpAddress } from '~~/server/utils/ips'
@@ -106,8 +106,8 @@ export default defineEventHandler(async (event) => {
   await precheckFilesSize(validFiles.map((ff) => ff.path), config.maxBulkSizeBytes)
 
   // Create ZIP archive
-  const archive = archiver('zip', {
-    zlib: { level: 9 }
+  const archive = new ZipArchive({
+    zlib: { level: 7 }
   })
 
   // Set response headers
