@@ -132,7 +132,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
-    preset: 'bun',
+    preset: 'node-server',
     experimental: {
       tasks: true
     },
